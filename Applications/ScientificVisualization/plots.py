@@ -33,7 +33,9 @@ def dog_plots():
     plt.savefig("dog_plots.pdf")
     plt.close()
     
-def heatmap():
+    
+    
+def heatmap_color():
     plt.figure(num=1, figsize=(10, 4) )
     n = 401
     x = np.linspace(-1,4,n)
@@ -41,15 +43,24 @@ def heatmap():
     X, Y = np.meshgrid(x,y)
     Z = np.sin(X)*np.sin(Y)
     
-    plt.subplot(1,2,1)
     plt.pcolormesh(X, Y, Z)
     plt.colorbar(ticks=[-1,0,.8])
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.savefig("heatmap_color.png", bbox_inches='tight')
+    plt.close()
+
+def heatmap_gray():
+    plt.figure(num=1, figsize=(10, 4) )
+    n = 401
+    x = np.linspace(-1,4,n)
+    y = np.linspace(-4,1,n)
+    X, Y = np.meshgrid(x,y)
+    Z = np.sin(X)*np.sin(Y)
     
-    plt.subplot(1,2,2)
+    plt.gca().set_aspect('equal', adjustable='box')
     plt.pcolormesh(X, Y, Z, cmap="gray")
     plt.colorbar(ticks=[-1,0,.8])
-    
-    plt.savefig("heatmap.png")
+    plt.savefig("heatmap_gray.png", bbox_inches='tight')
     plt.close()
     
 def healthcare():
@@ -155,7 +166,8 @@ def log_plots():
     
 if __name__ == "__main__":
     dog_plots()
-    heatmap()
+    heatmap_color()
+    heatmap_gray()
     healthcare()
     simplify_plot()
     log_plots()

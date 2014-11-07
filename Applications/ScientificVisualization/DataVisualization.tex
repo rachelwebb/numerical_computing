@@ -280,6 +280,7 @@ Note how much cleaner this looks than the original.
 
 
 \subsection*{Color}
+%TODO: explain how you can make a colorbar, either in this lab or the matplotlib lab
 Color should be added to your graphic thoughtfully. 
 The default settings in matplotlib should generally not be used. 
 Several bright colors in a single plot often jar the viewer, so you should limit the number and intensity of colors and use them only to emphasize parts of your data. 
@@ -296,7 +297,15 @@ See Figure \ref{fig:heatmap} for an example of a good and bad pseudocolor plot.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{heatmap.png}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{heatmap_color.png}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{heatmap_gray.png}
+\end{subfigure}
+%\includegraphics[width=\textwidth]{heatmap.png}
 \caption{Both of these pseudocolor plots depict the function $z = sin(x)sin(y)$ on the domain $[-1,4] \times [-4,1]$. 
 The plot at left uses a rainbow gradient which has no relationship to the data. 
 The plot at right uses a greyscale, which has two benefits: the colors are not irritating, and ``black'' is associated with ``low.''}
