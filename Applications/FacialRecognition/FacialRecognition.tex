@@ -1,37 +1,26 @@
 \lab{Application}{Facial Recognition using Eigenfaces}{Facial Recognition using Eigenfaces}
 \label{lab:FacialRecognition}
 
-\objective{In this lab we use the singular value decomposition to build a facial recognition system.}
+\objective{Use the singular value decomposition to build a facial recognition system.}
 
-Suppose we have a large database containing images of human faces together with identification information for each face.
-Given an unidentified facial image, we would like to find a matching face in the database, thereby identifying the person in the image.
-Such a task is known as \emph{facial recognition}.
-This task may come up, for example, in law enforcement, when attempting to identify unknown persons in surveillance footage.
-As humans, it is generally easy to compare two face images and determine whether the faces belong to the same person.
-However, it becomes impractical for humans to visually compare one face image with several thousand other face images in a database.
-Hence, we need a computational technique that automates the process of facial recognition.
-One particularly simple and effective technique is known as \emph{eigenfaces}, which we now explore.
+Suppose we have a large database containing images of human faces.
+We would like to identify people by matching their pictures to those in the database.
+This task is called \emph{facial recognition}.
 
-\section*{Eigenfaces}
-The method of eigenfaces provides a mathematical and computational technique for efficiently storing and querying a database of face images.
-As the name suggests, this method involves eigenvalues and eigenvectors of matrices related to the collection of face images at hand.
-At its core, the method of eigenfaces maps each face image to a low-dimensional representation in a way that highlights the distinguishing
-characteristics of the face while suppressing the irrelevant and unnecessary details.
-In this light, eigenfaces can be viewed as a means of dimensionality reduction.
-Let's get into the nuts and bolts of how this works.
+Facial recognition is important in law enforcement, as well as other situations. 
+For example, facial recognition can be combined with video surveillance to identify when a person is not authorized to be in a location.
 
-Suppose we have a collection of $k$ face images represented as vectors $f_1, f_2, \ldots, f_k$ of length $l$.
-(A digital image is normally represented by a $m \times n$ array of pixel values, but we can represented as a vector in $\mathbb{R}^{mn}$ by simply concatenating the rows of the array.)
-Define the \emph{mean face} $\mu$ to be the average of each face vector:
-\[
-\mu = \frac{1}{k}\sum_{i=1}^k f_i.
-\]
-\begin{figure}
-\includegraphics[width=0.3\textwidth]{meanFace.png}
-\caption{The mean face.}
-\label{facialRecognition:meanFace}
-\end{figure}
+Humans can easily compare two face images and determine whether they belong to the same person, but automating this process is more challenging.
+One technique for automated facial recognition uses \emph{eigenfaces}.
 
+\section*{Load the data}
+Eigenfaces are an efficient way to store and query a database of face images.
+As the name suggests, this method uses eigenvectors of matrices related to the collection of face images.
+Essentially, the method of eigenfaces projects face images to a lower-dimensional subspace in a way that preserves their distinguishing characteristics. 
+In the lower-dimensional subspace, comparing face images is much faster.
+
+Recall that a digital image may be stored as an $m \times n$ array of pixel intensities. 
+In this lab, we will store the images as $mn$-vectors by concatenating the rows of the $m \times n$ arrays.
 
 
 \begin{problem}
@@ -63,6 +52,22 @@ of the \li{faces94} directory on your machine):
 \end{lstlisting}
 The array \li{F} should be a $360000 \times 153$ matrix whose columns consist of 153 face images.
 \end{problem}
+
+
+\section*{Shift by the mean}
+
+We can make our algorithm more robust by using a trick called \emph{shifting by the mean}. 
+Suppose we have a collection of $k$ face images represented as vectors $f_1, f_2, \ldots, f_k$ of length $mn$.
+Define the \emph{mean face} $\mu$ to be the average of the $f_i$:
+\[
+\mu = \frac{1}{k}\sum_{i=1}^k f_i.
+\]
+\begin{figure}
+\includegraphics[width=0.3\textwidth]{meanFace.png}
+\caption{The mean face.}
+\label{facialRecognition:meanFace}
+\end{figure}
+
 \begin{problem}
 \label{prob:meanFace}
 Calculate the mean face image \li{mu} from the face image array \li{F} that you obtained in problem \ref{prob:getTrainingFaces}.
@@ -98,10 +103,10 @@ Your mean face should match that shown in Figure \ref{facialRecognition:meanFace
 \label{facialRecognition:differenceFaces}
 \end{figure}
 For each $i = 1,\ldots, k$, define $\bar{f}_i := f_i - \mu$.
-The mean-shifted face vector $\bar{f}_i$ represents how the $i$-th face deviates from the average, and thus captures more directly the unique and distinguishing features of the face.
-Now form the $l \times K$ matrix $A$ whose columns are given by the mean-shifted face vectors, i.e.
+The mean-shifted face vector $\bar{f}_i$ is the deviation of the $i$-th face from the mean, and thus captures the unique features of the face.
+Now form the $mn \times k$ matrix $\bar{F}$ whose columns are given by the mean-shifted face vectors, i.e.
 \[
-A = \begin{bmatrix}
+\bar{F} = \begin{bmatrix}
 \bar{f}_1 & \bar{f}_2 & \cdots & \bar{f}_k
 \end{bmatrix}.
 \]
@@ -113,53 +118,48 @@ Plot the first mean-shifted face, i.e. the first column of the matrix \li{A}.
 It should match the first face in Figure \ref{facialRecognition:differenceFaces}.
 \end{problem}
 
-Thus far, we have obtained the mean face vector $\mu$ and a representation of our collection of face images via the matrix $A$.
-With just this matrix and the mean vector, how might we go about searching our collection of face images for the closest match to a new face image $g$?
-A straightforward approach is to subtract the mean face vector from $g$, obtaining $\bar{g} = g-\mu$, and then compute the Euclidean distance from
-$\bar{g}$ to each mean-shifted face vector $\bar{f}_i$, i.e. compute the Euclidean distance between $\bar{g}$ and each column of $A$.
-Having done so, we can then choose the index $i$ where this distance $\|\bar{g}-\bar{f}_i\|_2$ is smallest, and return the $i$-th face image as the best match.
-Although this approach is quite sensible, it become computationally expensive as the number and size of our face images increases.
-What we need, then, is a way to reduce the dimensionality of our images.
+\section*{Project to the face space}
+Now suppose we have a new face vector $g$. 
+How can we find the closest face image in our database?
+A naive approach is to subtract the mean face vector from $g$, obtaining $\bar{g} = g-\mu$, and then compute the Euclidean distance from $\bar{g}$ to each mean-shifted face vector $\bar{f}_i$.
+Then we can find the index $i$ where the distance $\|\bar{g}-\bar{f}_i\|_2$ is smallest, and return the $i$-th face image as the best match.
+Unfortunately, this approach is computationally intractable when the length $mn$ of the vectors $f_i$ is large.
+Since a low-resolution photo may easily have $100\times 100 = 10,000$ pixels, in practice $mn$ is very large indeed.
 
-\begin{comment}
-The discussion in the paragraph below needs some work.
-I need to better understand why the eigenfaces basis works so well.
+The trick is to reduce the dimension of the face vectors $f_i$, so that instead of living in the $mn$-dimensional space of all possible images, they live in the subspace of face images.
+We call this subspace the \emph{face space}.
+We may approximate the face space as the span of the face images in our database; i.e., as the span of the columns of $\bar{F}$, or equivalently the range $\mathscr{R}(\bar{F})$ of $\bar{F}$.
 
-Although this approach is quite sensible, there are a few issues.
-Firstly, as the number of face images in our database grows large, both storing the full matrix $A$ and computing $\|\bar{g}-\bar{f}_i\|_2$ for all $i$
-become increasingly difficult from a computational standpoint.
-Secondly -- and this is the more important point -- calculating the Euclidean distance between two face images in the standard basis may not be the best measure
-of how similar the two faces are (and empirical evidence supports this).
-For example, if we have two images of the same face but with different backgrounds, the Euclidean distance between the face vectors may be very large,
-since in the standard basis, every pixel is weighted equally.
-Given these issues, it is natural to ask ourselves whether there exists a low-dimensional subspace with a basis in which we can represent our
-face images with minimal error and where the Euclidean distance is a more robust measure of face similarity.
-\end{comment}
-
-Since the face images all have much in common, we have reason to hope that they all lie (nearly) in a low-dimensional subspace of $\mathbb{R}^l$.
-The singular value decomposition of $A$ gives us just such a subspace.
-In particular, if we write the singular value decomposition as
+To efficiently compare $\bar{g}$ to the database faces $\bar{f}_i$, we need to project $\bar{g}$ into the face space. In fact,
 \[
-A = U\Sigma V^H,
+proj_{\mathscr{R}(\bar{f})} \bar{g} = \overline{F}\bar{F}^{\dagger}\bar{g},
 \]
-then the columns of $U$ corresponding to the positive singular values form an orthonormal basis for the columns of $A$.
-Recall that there are $r$ positive singular values, where $r$ is the rank of $A$.
-Hence, if $r \ll l$, then we have found a low-dimensional subspace in which to represent our face vectors.
-We call this subspace the \emph{eigenface subspace}, and we call each basis vector (i.e. each column of $U$ corresponding
-to a positive singular value) an \emph{eigenface}.
-\begin{figure}
-\begin{subfigure}[b]{0.3\textwidth}
-\includegraphics[width=\textwidth]{eigenface0.png}
-\end{subfigure}
-\begin{subfigure}[b]{0.3\textwidth}
-\includegraphics[width=\textwidth]{eigenface1.png}
-\end{subfigure}
-\begin{subfigure}[b]{0.3\textwidth}
-\includegraphics[width=\textwidth]{eigenface2.png}
-\end{subfigure}
-\caption{The top three eigenfaces.}
-\label{facialRecognition:eigenfaces}
-\end{figure}
+where $\bar{F}^{\dagger}$ is the Moore-Penrose pseudoinverse of $\bar{F}$ [cite Proposition 4.5.3 of the text].
+ Call this projection matrix $P$. 
+ Furthermore, if $U_1\Sigma_1V_1^T$ is the compact form of the SVD of $\bar{F}$, then $\bar{F}^{\dagger} = V_1\Sigma_1^{-1}U_1^T$ [cite Theorem 4.5.1 of the text]. 
+ Thus
+\begin{align*}
+P = proj_{\mathscr{R}(\bar{F})} &= U \Sigma V^T V_1\Sigma_1^{-1}U_1^T\\
+&= \begin{pmatrix}
+U_1 & U_2
+\end{pmatrix} \begin{pmatrix}
+\Sigma_1 & 0\\
+0 & 0 
+\end{pmatrix} \begin{pmatrix}
+V_1^T \\
+V_2^T
+\end{pmatrix} V_1\Sigma_1^{-1}U_1^T\\
+&= \begin{pmatrix}
+U_1\Sigma_1 & 0
+\end{pmatrix} \begin{pmatrix}
+I \\
+0
+\end{pmatrix}\Sigma_1^{-1}U_1^T\\
+&= U_1U_1^T.
+\end{align*}
+Because the columns of $U_1$ are eigenvectors of $AA^T$, we call them \emph{eigenfaces}.
+Our computation shows that the eigenfaces are an orthonormal basis for the face space.
+
 \begin{problem}
 \label{prob:svd}
 Calculate the singular value decomposition of the matrix \li{A} as follows:
@@ -175,6 +175,67 @@ By plotting some of the other eigenfaces, note that each has face-like propertie
 types of facial structures.
 \end{problem}
 
+\section*{Project to a subspace of the face space}
+Unfortunately, the face space still has too many dimensions to be computationally efficient.
+We wish to further reduce the dimension of the space we're working in by projecting to an $s$-dimensional subspace of the face space.
+
+By the Schmidt-Eckart-Young-Mirsky theorem from Lab [cite prev. lab], the best rank-$s$ approximation to $P$ can be computed from its compact SVD.
+But we already know a compact SVD of $P$, since $P = \bar{F}\bar{F}^{\dagger} = U_1 I_s U_1^T$. So by this theorem, the best rank-$s$ approximation to $P$ is $\widehat{P}_s = U_sU_s^T$, where $U_s$ is the first $s$ columns of $U_1$.
+
+Therefore, the $s$-dimensional subspace that best approximates the face space is spanned by the first $s$ eigenfaces. 
+We may project any vector into this subspace with the matrix $\widehat{P}_s = U_sU_s^T$.
+
+However, it does us no good to project all our vectors into an $s$-dimensional space if we still store them as vectors in $\mathbb{R}^{nm}$. 
+Thus, we must store our face vectors in terms of a basis for this subspace---that is, we must change our basis to the columns of $U_s$.
+The change-of-basis matrix is $U_s^T$, so $U_s^T\widehat{P}_s = U_s^TU_sU_s^T = U_s^T$. 
+Thus we can project into the subspace and change basis by multiplying by $U_s^T$.
+To change back to the full $mn$-vector, multiply by $U_s$.
+
+\begin{comment}
+The discussion in the paragraph below needs some work.
+I need to better understand why the eigenfaces basis works so well.
+
+Although this approach is quite sensible, there are a few issues.
+Firstly, as the number of face images in our database grows large, both storing the full matrix $A$ and computing $\|\bar{g}-\bar{f}_i\|_2$ for all $i$
+become increasingly difficult from a computational standpoint.
+Secondly -- and this is the more important point -- calculating the Euclidean distance between two face images in the standard basis may not be the best measure
+of how similar the two faces are (and empirical evidence supports this).
+For example, if we have two images of the same face but with different backgrounds, the Euclidean distance between the face vectors may be very large,
+since in the standard basis, every pixel is weighted equally.
+Given these issues, it is natural to ask ourselves whether there exists a low-dimensional subspace with a basis in which we can represent our
+face images with minimal error and where the Euclidean distance is a more robust measure of face similarity.
+\end{comment}
+\begin{comment}
+Since the face images all have much in common, we have reason to hope that they all lie (nearly) in a low-dimensional subspace of $\mathbb{R}^l$.
+The singular value decomposition of $A$ gives us just such a subspace.
+In particular, if we write the singular value decomposition as
+\[
+A = U\Sigma V^H,
+\]
+then the columns of $U$ corresponding to the positive singular values form an orthonormal basis for the columns of $A$.
+Recall that there are $r$ positive singular values, where $r$ is the rank of $A$.
+Hence, if $r \ll l$, then we have found a low-dimensional subspace in which to represent our face vectors.
+We call this subspace the \emph{eigenface subspace}, and we call each basis vector (i.e. each column of $U$ corresponding
+to a positive singular value) an \emph{eigenface}.
+\end{comment}
+
+
+\begin{figure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{eigenface0.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{eigenface1.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{eigenface2.png}
+\end{subfigure}
+\caption{The top three eigenfaces.}
+\label{facialRecognition:eigenfaces}
+\end{figure}
+
+
+\begin{comment}
 Not all of the eigenfaces are equally important, however.
 In particular, the eigenfaces corresponding to the singular values closest to 0 contribute the least, on average, to the face vectors in $A$.
 Thus, we can get away with only using the eigenfaces corresponding to the $n$ largest singular values (call these the top $n$ eigenfaces).
@@ -193,6 +254,9 @@ Hence the matrix $\hat{A}$ defined by
 \]
 contains as its columns the coordinate vectors of the face images in the top $n$ eigenfaces basis.
 Note that $\hat{A}$ is an $n \times k$ matrix, and is therefore much smaller than the original $l \times k$ matrix $A$.
+\end{comment}
+
+
 \begin{problem}
 \label{prob:top_n}
 The columns of the matrix \li{U} that you computed in problem \ref{prob:svd} are already ordered according to descending singular values.
@@ -215,6 +279,8 @@ Write a function \li{nEigenfaces} that takes as input \li{U}, \li{A}, and an int
 \caption{Image rebuilt with varying number of eigenfaces}
 \label{facialRecognition:rebuiltImage}
 \end{figure}
+
+\begin{comment}
 Of course, moving to a lower-dimensional subspace by using only the top $n$ eigenfaces introduces some error, in the sense that we cannot perfectly
 reconstruct the face images from their coordinate vectors.
 However, this error is tolerable, provided $n$ is not \emph{too} small.
@@ -223,7 +289,25 @@ Note that we can approximately reconstruct $\bar{f}_i$ from the coordinate vecto
 \bar{f}_i \approx U_n\hat{f}_i.
 \]
 See Figure \ref{facialRecognition:rebuiltImage} for examples of reconstructed face images giving different numbers of eigenfaces.
+\end{comment}
 
+\section*{Recognizing faces}
+Finally, we are ready to identify which mean-shifted image $\bar{f}_i$ is closest to $\bar{g}$. 
+We begin by projecting all vectors to some $s$-dimensional subspace and writing them in terms of an orthonormal basis for that subspace. 
+This is accomplished with multiplication by $U_s^T$:
+\[
+\widehat{f}_i = U_s^T(f_i-\mu) \qquad \widehat{g} = U_s^T(\widehat{g}-\mu).
+\]
+
+Next, we compute which $\widehat{f}_i$ is closest to $\widehat{g}$. 
+Since the columns of $U_s$ are an orthonormal basis, we get the same result doing the computation in this basis as we would in the standard Euclidean basis.
+Define
+\[
+i^* = \text{argmin}_i \|\widehat{f}_i - \widehat{g}\|_2.
+\]
+Then the $i^*$-th face image is the best match for $g$.
+
+\begin{comment}
 We now have a low-dimensional representation of our database of face images given by $\hat{A}_n$, an array of eigenfaces given by $U_n$,
 and the mean face $\mu$. Using just these objects, we can now perform facial recognition.
 Let $g$ be a face vector.
@@ -238,6 +322,9 @@ We then return the matching face image $f_{i^*}$, where
 \[
 i^* = \text{argmin}_i \|\hat{f}_i - \hat{g}\|_2.
 \]
+\end{comment}
+
+
 \begin{problem}
 \label{prob:nearest}
 Write a function \li{findNearest} that accepts a matrix $M$ of shape $a \times b$ and a vector $x$
