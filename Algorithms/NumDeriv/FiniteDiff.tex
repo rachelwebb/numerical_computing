@@ -5,7 +5,131 @@
 numerical derivatives to find edges in images.}
 
 \section*{One Dimension}
+The derivative of a function $f$ at a point $x_0$ is
 
+\begin{equation}
+\label{eqn:deriv}
+f'(x_0) = \lim_{h\rightarrow 0} \frac{f(x_0 + h)-f(x_0)}{h}.
+\end{equation}
+In this lab we will investigate one way a computer can calculate $f'(x_0)$. 
+
+\subsection*{Forward difference quotients}
+Suppose that in Equation \ref{eqn:deriv}, instead of taking a limit, we just pick a small value for $h$. Then we would expect $f'(x_0)$ to be close to the quantity
+\begin{equation}\label{equ:forward_diff}
+ \frac{f(x_0 + h)-f(x_0)}{h}.
+\end{equation}
+This quotient is called the \emph{first order forward difference approximation} of the derivative. Because $f'(x_0)$ is the limit of such quotients, we expect that when $h$ is small, this quotient is close to $f'(x_0)$. We can use Taylor's formula to find just how close.
+
+By Taylor's formula,
+\[
+f(x_0+h) = f(x_0) + f'(x_0)h + R_2(h),
+\]
+where $R_2(h) = \left( \int_0^1 (1-t) f''(x_0+th) dt \right) h^2$. (This is called the \emph{integral form} of the remainder for Taylor's Theorem; see [ref textbook] for one exposition). When we solve this equation for $f'(x_0)$ we get
+\begin{equation}\label{equ:forward_diff_with_remainder}
+f'(x_0) = \frac{f(x_0+h)-f(x_0)}{h} - \frac{R_2(h)}{h}.
+\end{equation}
+Thus, the error in using the first order forward difference quotient to approximate $f'(x_0)$ is 
+\[
+\left | \frac{R_2(h)}{h} \right | \leq |h| \int_0^1 |1 - t||f''(x_0+th)|dt.
+\]
+If we assume $f''$ is continuous, then for any $\delta$, set $M = \sup_{x \in (x_0-\delta, x_0+\delta)} f''(x)$. Then if $|h| < \delta$, we have
+\[
+\left | \frac{R_2(h)}{h} \right | \leq |h|\int_0^1 M dt = M|h| = O(h).
+\]
+Therefore, the error in using \eqref{equ:forward_diff} to approximate $f'(x_0)$ grows like $h$.
+
+
+
+\subsection*{Centered difference quotients}
+In fact, we can approximate $f'(x_0)$ to second order with another difference quotient, called the \emph{centered difference quotient}. 
+Evaluate Taylor's formula at $x_0-h$ to derive
+\begin{equation}\label{equ:backwards_diff_with_remainder}
+f'(x_0) = \frac{f(x_0)-f(x_0-h)}{h} + \frac{R_2(-h)}{h}.
+\end{equation}
+The quotient that is the first term of \eqref{equ:backwards_diff_with_remainder} is called the \emph{backward difference quotient.} 
+This quotient also approximates $f'(x_0)$ to first order, so it is not the quotient we are looking for. 
+When we add \eqref{equ:forward_diff_with_remainder} and \eqref{equ:backwards_diff_with_remainder} and solve for $f'(x_0)$ (by dividing by 2), we get
+\begin{equation}\label{equ:centered_diff}
+f'(x_0) = \frac{\frac{1}{2}f(x_0+h) - \frac{1}{2}f(x_0-h)}{h} + \frac{R_2(-h) - R_2(h)}{2h}
+\end{equation}
+The \emph{centered difference quotient} is the first term of the right hand side of \eqref{equ:centered_diff}. Let us investigate the remainder term to see how accurate this approximation is. Recall from the proof of Taylor's theorem that $R_k = \frac{f^{(k)}(x_0)}{k!}h^k + R_{k+1}$. Therefore,
+\begin{align*}
+\frac{R_2(-h) - R_2(h)}{2h} &= \frac{1}{2h}\left(\frac{f''(x_0)}{2}h^2 + R_{3}(-h) - \frac{f''(x_0)}{2}h^2 - R_{3}(h) \right)\\
+&= \frac{1}{2h} ( R_3(-h)-R_3(h))\\
+&= \frac{1}{2h}\left(  \left( \int_0^1 \frac{(1-t)^2}{2} f'''(x_0+th) dt \right) h^3  -  \left(\int_0^1 \frac{(1-t)^2}{2} f'''(x_0-th) dt \right) h^3  \right)\\
+&= \left(  \int_0^1 \frac{(1-t)^2}{4}( f'''(x_0+th)-f'''(x_0-th)) \right)h^2\\
+&=  O(h^2)
+\end{align*}
+once we restrict $h$ to some $\delta$-neighborhood of 0. 
+So the error in using the centered difference quotient to approximate $f'(x_0)$ grows like $h^2$, which is smaller than $h$ when $|h|<1$.
+
+\subsection*{Accuracy of approximations}
+
+Let us discuss what step size $h$ we should plug into the difference quotients to get the best approximation to $f'(x_0)$.
+Since $f'$ is defined as a limit as $h \rightarrow 0$, you may think that it is best to choose $h$ as small as possible.
+In fact, dividing by very small numbers causes errors in floating point arithmetic.
+This means that as we decrease $|h|$, the error between $f'(x_0)$ and the difference quotient will first decrease, but then increase when $|h|$ gets too small. 
+
+Let us do an example with the function $f(x) = e^x$. A quick way to write $f$ as a function in Python is with the \li{lambda} keyword.
+\begin{lstlisting}
+>>> import numpy as np
+>>> f = lambda x: np.exp(x)
+\end{lstlisting}
+In general, the line \li{f = lambda <params> : <expression>} is equivalent to defining a function \li{f} that accepts the parameters \li{params} and returns \li{expression}.
+Next we fix a step size \li{h} and define an approximation to the derivative of \li{f} using the centered difference quotient.
+\begin{lstlisting}
+>>> h = 1e-1
+>>> Df_app = lambda x: .5*(f(x+h)-f(x-h))/h
+\end{lstlisting}
+Finally, we check the accuracy of this approximation at $x_0=1$ by computing the difference between \li{Df_app(1)} and the actual derivative evaluated at 1.
+\begin{lstlisting}
+# Since f(x) = e^x, the derivative of f(x) is f(x)
+>>> np.abs( f(1)-Df_app(1) )
+0.0045327354883726301
+\end{lstlisting}
+We note that our functions \li{f} and \li{Df_app} behave as expected when they are passed a NumPy array.
+\begin{lstlisting}
+>>> h = np.array([1e-1, 1e-3, 1e-5, 1e-7, 1e-9, 1e-11])
+>>> np.abs( f(1)-Df_app(1) )
+array([  4.53273549e-03,   4.53046679e-07,   5.85869131e-11,
+         5.85873572e-11,   6.60275079e-09,   1.04294937e-05])
+\end{lstlisting}
+These results are summarized in Table \ref{table:approx_errors}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$h$ 		& 1e-1 & 1e-3 & 1e-5 & 1e-7	 & 1e-9 & 1e-11 \\ \hline
+Error  	& 5e-3 & 5e-7 & 6e-11 & 6e-11 & 7e-9 & 1e-5\\ \hline
+\end{tabular}
+\caption{This table shows that it is best not to choose $h$ too small when you approximate derivatives with difference quotients. Here, ``Error'' equals the absolute value of $f'(1)-f_{app}(1)$ where $f(x) = e^x$ and $f_{app}$ is the centered difference approximation to $f'$.}
+\label{table:approx_errors}
+\end{center}
+\end{table}
+
+Thus, the optimal value of $h$ is one that is small, but not too small. A good choice is \li{h = 1e-5}.
+
+\begin{problem}
+Write a function \li{numDer1} that accepts as inputs: a callable function object \li{f} and
+a keyword argument \li{h} giving the step size (default \li{h = 1e-5}). Have the function return an array of the approximate 1st order derivative with accuracy 1 of \li{f} at each of the points in \li{pts}, using the centered  coefficients.
+\end{problem}
+
+You may wonder if the forward or backward difference quotients are ever used, since the centered difference quotient is a more accurate approximation to the derivative.
+In fact, there are some functions that in practice do not behave well under centered difference quotients.
+In these cases one must use the forward or backward difference quotient.
+
+
+Finally, we remark that forward, backward, and centered difference quotients can be used to approximate higher-order derivatives of $f$.
+Unfortunately, taking derivatives this way is an \emph{unstable} operation. 
+This means that taking a derivative can amplify the arithmetic error in your computation.
+For this reason, difference quotients are not generally used  to approximate derivatives higher than second order.
+
+
+
+
+
+\begin{comment}
 The derivative of a function at a point is formally defined as
 
 \begin{equation}
@@ -125,7 +249,7 @@ Write a function \li{numDer2} that accepts as inputs: a callable function object
 a keyword argument \li{h} giving the step size (default \li{h = 1e-5}). Have the function return an array of the approximate 2nd order derivative with accuracy 1 of \li{f} at each of the points in \li{pts}, using the centered  coefficients.
 \end{problem}
 
-\begin{comment}
+
 \begin{problem}
 Write a function \li{numDer} that accepts as inputs: a callable function object \li{f}, an
 array of numbers \li{pts}, a keyword argument \li{mode} (taking one of the values 
@@ -138,7 +262,7 @@ arguments should be \li{mode = 'centered', d = 1, o = 2, h = 1e-5}.
 Have the function return an array of the approximate derivative of order \li{d} with accuracy
  \li{o} of \li{f} at each of the points in \li{pts}, using the coefficients indicated by \li{mode}.
 \end{problem}
-\end{comment}
+
 
 We note that higher order approximations of the derivative can be derived using the Taylor series and Lagrange polynomials, but generally higher-order approximations are not practically useful as they can often be ill-conditioned.
 
@@ -205,14 +329,14 @@ are much lower than the log of the errors of the order 1 approximations.
     \label{fig:convergence}
 \end{figure}
 
-\begin{comment}
+
 \begin{problem}
 Explore the convergence properties for different orders of approximation,
 and for the second derivative as well. You may need to adjust your $h$
 values, as they may be too small for some of the calculations.
 \end{problem}
-\end{comment}
 
+\end{comment}
 \section*{Multi Dimensions}
 
 The Jacobian is a generalization of the derivative in many dimensions. We can think of it, 
