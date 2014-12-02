@@ -1,10 +1,10 @@
 \lab{Algorithms}{Numerical Derivatives}{Numerical Derivatives}
 \label{Ch:Numerical Derivatives}
 
-\objective{Understand and implement finite difference approximations of the derivative. Then explore Image Filters. In particular, we will explore the Sobel Filter, which uses 
-numerical derivatives to find edges in images.}
+\objective{Understand and implement finite difference approximations of the derivative. 
+Then use finite difference quotients to find edges in images via the Sobel filter.}
 
-\section*{One Dimension}
+\section*{Derivative approximations in one dimension}
 The derivative of a function $f$ at a point $x_0$ is
 
 \begin{equation}
@@ -14,17 +14,21 @@ f'(x_0) = \lim_{h\rightarrow 0} \frac{f(x_0 + h)-f(x_0)}{h}.
 In this lab we will investigate one way a computer can calculate $f'(x_0)$. 
 
 \subsection*{Forward difference quotients}
-Suppose that in Equation \ref{eqn:deriv}, instead of taking a limit, we just pick a small value for $h$. Then we would expect $f'(x_0)$ to be close to the quantity
+Suppose that in Equation \ref{eqn:deriv}, instead of taking a limit, we just pick a small value for $h$. 
+Then we would expect $f'(x_0)$ to be close to the quantity
 \begin{equation}\label{equ:forward_diff}
  \frac{f(x_0 + h)-f(x_0)}{h}.
 \end{equation}
-This quotient is called the \emph{first order forward difference approximation} of the derivative. Because $f'(x_0)$ is the limit of such quotients, we expect that when $h$ is small, this quotient is close to $f'(x_0)$. We can use Taylor's formula to find just how close.
+This quotient is called the \emph{first order forward difference approximation} of the derivative. 
+Because $f'(x_0)$ is the limit of such quotients, we expect that when $h$ is small, this quotient is close to $f'(x_0)$. 
+We can use Taylor's formula to find just how close.
 
 By Taylor's formula,
 \[
 f(x_0+h) = f(x_0) + f'(x_0)h + R_2(h),
 \]
-where $R_2(h) = \left( \int_0^1 (1-t) f''(x_0+th) dt \right) h^2$. (This is called the \emph{integral form} of the remainder for Taylor's Theorem; see [ref textbook] for one exposition). When we solve this equation for $f'(x_0)$ we get
+where $R_2(h) = \left( \int_0^1 (1-t) f''(x_0+th) dt \right) h^2$. 
+(This is called the \emph{integral form} of the remainder for Taylor's Theorem; see [ref textbook] for one exposition). When we solve this equation for $f'(x_0)$ we get
 \begin{equation}\label{equ:forward_diff_with_remainder}
 f'(x_0) = \frac{f(x_0+h)-f(x_0)}{h} - \frac{R_2(h)}{h}.
 \end{equation}
@@ -52,7 +56,9 @@ When we add \eqref{equ:forward_diff_with_remainder} and \eqref{equ:backwards_dif
 \begin{equation}\label{equ:centered_diff}
 f'(x_0) = \frac{\frac{1}{2}f(x_0+h) - \frac{1}{2}f(x_0-h)}{h} + \frac{R_2(-h) - R_2(h)}{2h}
 \end{equation}
-The \emph{centered difference quotient} is the first term of the right hand side of \eqref{equ:centered_diff}. Let us investigate the remainder term to see how accurate this approximation is. Recall from the proof of Taylor's theorem that $R_k = \frac{f^{(k)}(x_0)}{k!}h^k + R_{k+1}$. Therefore,
+The \emph{centered difference quotient} is the first term of the right hand side of \eqref{equ:centered_diff}. 
+Let us investigate the remainder term to see how accurate this approximation is. 
+Recall from the proof of Taylor's theorem that $R_k = \frac{f^{(k)}(x_0)}{k!}h^k + R_{k+1}$. Therefore,
 \begin{align*}
 \frac{R_2(-h) - R_2(h)}{2h} &= \frac{1}{2h}\left(\frac{f''(x_0)}{2}h^2 + R_{3}(-h) - \frac{f''(x_0)}{2}h^2 - R_{3}(h) \right)\\
 &= \frac{1}{2h} ( R_3(-h)-R_3(h))\\
@@ -104,7 +110,8 @@ These results are summarized in Table \ref{table:approx_errors}.
 $h$ 		& 1e-1 & 1e-3 & 1e-5 & 1e-7	 & 1e-9 & 1e-11 \\ \hline
 Error  	& 5e-3 & 5e-7 & 6e-11 & 6e-11 & 7e-9 & 1e-5\\ \hline
 \end{tabular}
-\caption{This table shows that it is best not to choose $h$ too small when you approximate derivatives with difference quotients. Here, ``Error'' equals the absolute value of $f'(1)-f_{app}(1)$ where $f(x) = e^x$ and $f_{app}$ is the centered difference approximation to $f'$.}
+\caption{This table shows that it is best not to choose $h$ too small when you approximate derivatives with difference quotients. 
+Here, ``Error'' equals the absolute value of $f'(1)-f_{app}(1)$ where $f(x) = e^x$ and $f_{app}$ is the centered difference approximation to $f'$.}
 \label{table:approx_errors}
 \end{center}
 \end{table}
@@ -339,7 +346,7 @@ values, as they may be too small for some of the calculations.
 \end{problem}
 
 \end{comment}
-\section*{Multiple Dimensions}
+\section*{Derivative approximations in multiple dimensions}
 Finite difference methods can also be used to calculate derivatives in higher dimensions.
 Recall that the Jacobian of a function $f:\mathbb{R}^n \rightarrow \mathbb{R}^m$ at a point $x_0 \in \mathbb{R}^n$ is the $m \times n$ matrix $J = (J_{ij})$ defined by
 \begin{equation*}
@@ -429,7 +436,7 @@ This function is known as the Rosenbrock Banana function, or Rosenbrock's Valley
 \end{figure}
 \end{comment}
 
-\section*{Application: Image Filters}
+\section*{Application to image filters}
 Recall that a computer stores an image as a 2-D array of pixel values (i.e., a matrix of intensities).
 An image filter is a function that transforms an image by operating on it locally.
 That is, to compute the $ij^{th}$ pixel value in the new image, an image filter uses only the pixels in a small neighborhood of the $ij^{th}$ pixel in the original image.
@@ -455,7 +462,41 @@ Say $A$ is an $m \times n$ matrix. Here, we take $A_{ij}=0$ when $i \not \in \{1
 The value of $C_{ij}$ is a linear combination of the nearby pixel values, with coefficients given by $F$ (see Figure \ref{fig:convolution}).
 In fact, $C_{ij}$ equals the Frobenius inner product of $F$ with the $3 \times 3$ submatrix of $A$ centered at $ij$.
 
-[TODO: insert fig:convolution]
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node[draw, minimum width=12cm, minimum height=
+	7cm, ultra thick](outer_rec)[]{};
+\node[draw, minimum width=10cm, minimum height=
+	5cm, ultra thick, fill=black!10!](inner_rec)[]{};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick, fill=black!30!](square1)at(-4.75,2.25){\textbullet};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick,fill=black!30!](square2)at(-1.75,-.75){\textbullet};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick, fill=black!30!](square3)at(4.75,.75){\textbullet};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick, fill=black!30!](square4)at(3.25,-1.25){\textbullet};
+\draw[step=.5, ultra thin, color=black!50!](-6,-3.5)grid(6,3.5);
+
+%redraw borders
+\node[draw, minimum width=10cm, minimum height=
+	5cm, ultra thick, ][]{};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick]at(-4.75,2.25){};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick]at(-1.75,-.75){};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick]at(4.75,.75){};
+\node[draw, minimum width=2.5cm, minimum height=2.5cm, 
+	ultra thick]at(3.25,-1.25){};
+\end{tikzpicture}
+\caption{This diagram illustrates how to convolve an image with a filter.
+The light grey rectangle represents the original image $A$, and the dark grey squares are the filter $F$.
+The larger rectangle is the image padded with zeros; i.e., all pixel values in the outer white band are 0.
+To compute the entry of the convolution matrix $C$ located at a black dot, take the inner product of $F$ with the submatrix of the padded image centered at the dot.}
+\label{fig:convolution}
+\end{figure}
 
 \subsubsection*{Implementation in NumPy}
 Let us write a function that convolves an image with a filter. 
@@ -554,7 +595,7 @@ A database of such images can be downloaded from \url{http://www.imageprocessing
 
 
 
-\subsection*{Edge Detection}
+\subsection*{Edge detection}
 
 Automatically detecting edges in an image can be used to segment or sharpen the image. 
 We will find edges with the Sobel filter, which computes the gradient of the image at each pixel. 
