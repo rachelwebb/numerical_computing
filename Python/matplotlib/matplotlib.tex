@@ -1,87 +1,67 @@
-\lab{Applications}{Plotting With matplotlib and Mayavi}{Plotting}
-\objective{Introduce some of the basic plotting functions available in matplotlib and Mayavi.}
+\lab{Applications}{Python Plotting Libraries}{Plotting}
+\objective{Learn some of the plotting functions available in \li{matplotlib} and Mayavi.}
 \label{lab:Matplotlib_and_Mayavi}
 
-\section*{matplotlib}
-matplotlib is one of Python's many plotting libraries.
-It has an active development community and was designed to resemble MATLAB.
-Because of its high quality and its helpful user interface toolkits, matplotlib serves as our primary plotting library for 2D graphs in this text.
+\section*{The \li{matplotlib} library}
+The Python library \li{matplotlib} will be our primary tool for creating 2-D graphs in this text. This lab introduces the basic features of \li{matplotlib}; for more information, visit the documentation at \url{http://matplotlib.org}.
 
-This section seeks to introduce many of the basic plotting functions we will access using matplotlib, but matplotlib has many more.
-For further reference and information, visit \url{http://matplotlib.org}.
-
-
-\subsection*{Simple Plots}
-To get started, we import pyplot from matplotlib.
+To begin, import \li{pyplot} from \li{matplotlib}.
 \begin{lstlisting}
 from matplotlib import pyplot as plt
 \end{lstlisting}
 
-The basic line plotting function in matplotlib is \li{plot()}.
-It takes a set of data points and plots the line that is formed between those points.
-These plots are pieced together using a \emph{state machine environment}, which means that we can run several different functions that will display or modify the plot we are creating.
+\subsection*{Line plots}
+The function call \li{plt.plot(x, y)} takes two 1-D NumPy arrays, \li{x} and \li{y}, and plots the points \li{(x[i], y[i])}, connecting them with straight lines.
 
-To plot and display our function we typically use an outline similar to the following:
+For example, this code plots $y=e^x$ on the interval $[-2,3]$. The output is in Figure \ref{fig:exp_plot}.
 \begin{lstlisting}
-# Definition of x and y coordinates (typically NumPy arrays or lists).
-plt.plot(x,y)
-plt.show()
-\end{lstlisting}
-Note that x and y must be the same length in order for \li{plot(x,y)} to work.
-
-When we define our x and y coordinates, we often use NumPy's \li{linspace(<start>, <stop>, num=50)} function since it returns evenly spaced values over a given interval.
-These values are returned in an \li{ndarray}.
-So, after importing \li{numpy} and \li{pyplot}, we can generate a basic plot of the function $e^x$ with the following lines of code:
-\begin{lstlisting}
-# Increase number of samples from default 50 to 501.
+import numpy as np
+# Create an array of 501 evenly spaced points in [-2,3].
 x = np.linspace(-2, 3, 501)
 y = np.exp(x)
 plt.plot(x, y)
 plt.show()
 \end{lstlisting}
 
-This should display a plot similar to the one shown in Figure \ref{fig:exp_plot}.
-
 \begin{figure}
+\centering
 \includegraphics[width=\textwidth]{exp_plot.pdf}
-\caption{A simple plot of $e^x$.}
+\caption{A graph of $e^x$ created with \li{plt.plot()}.}
 \label{fig:exp_plot}
 \end{figure}
 
+All calls to \li{plt} functions will modify the same figure until you call \li{plt.show()}. 
+The function \li{plt.show()} displays the current figure and resets the system, so that the next call to a \li{plt} function modifies a new figure. 
 
-\subsection*{Multiple Plots}
-We can also use our interface to display multiple plots at once.
-The following code will plot lines with random values at integers from 1 to 10.
-Note that NumPy's \li{random.rand} function creates an array of a specified shape and fills it with random samples from a uniform distribution over the interval [0,1).
-The given dimensions of the array should be positive and, if no argument is given, a single float is returned.
-
+We can take advantage of this system to plot multiple lines on the same axes.
+For example, the following code plots ten lines, each with random values at integers from 1 to 10. 
+The output is in Figure \ref{fig:statemachine}.
 \begin{lstlisting}
 x = np.linspace(1, 10, 10)
+
+# Create a 10x10 array of uniformly distributed values in [0,1).
 y = np.random.rand(10, 10)
+
+# Plot each row of y
+for row in y:
+    plt.plot(x, row)
+plt.show()
+\end{lstlisting}
+
+Alternatively, we can produce the same graph with a single call to \li{plt.plot}.
+\begin{lstlisting}
 plt.plot(x, y[0], x, y[1], x, y[2], x, y[3], x, y[4], x, y[5], x, y[6], x, y[7], x, y[8], x, y[9])
 plt.show()
 \end{lstlisting}
 
-We just used the plot function to plot several different lines at once.
-Alternatively, we can plot each \li{(x, y[i])} pair separately and overlay the plots to produce the same result.
-We use a loop to efficiently overlay create each plot.
-\begin{lstlisting}
-x = np.linspace(1, 10, 10)
-y = np.random.rand(10, 10)
-for n in y:
-    plt.plot(x, n)
-plt.show()
-\end{lstlisting}
-A plot that was generated by this code will be similar to the one shown
-in Figure \ref{fig:statemachine}.
 
 \begin{figure}
+\centering
 \includegraphics[width=\textwidth]{statemachine.pdf}
-\caption{A plot of $10$ lines with randomly generated $y$ values.}
+\caption{A graph of ten lines with randomly generated $y$ values, created with \li{plt.plot()}.}
 \label{fig:statemachine}
 \end{figure}
 
-Note that a suitable domain and range for your plot is automatically chosen unless you specify otherwise.
 
 \begin{problem} Plot the function $\sin(x)$ from $0$ to $2\pi$ with a red dashed line.
 Then plot the function $\cos(x)$ on the same domain with a blue dotted line.
