@@ -179,29 +179,33 @@ Your plot should look like the figure below.
 \end{figure}
 \end{problem}
 
-\subsection*{pcolormesh}
-Pcolormesh is a function in pyplot which produces a pseudocolor plot of a 2D array.
-Think of it as a 3D plot that assigns color rather than height to the result $C$ of a function in $x$ and $y$.
-Since our \emph{domain} is now two-dimensional, instead of one-dimensional as before, we use NumPy's \li{meshgrid} function.
-This function takes two one-dimensional arrays that represent our input values for $x$ and $y$ respectively, and returns a grid of $(x, y)$ coordinates.
-$X$ represents the $x$-coordinates of this grid and $Y$ represents the $y$-coordinates.
-We then evaluate our function at these points and return the result in a two-dimensional array $C$, which the pcolormesh function uses to assign colors to the points in our $xy$ domain.
+\subsection*{Heatmaps}
+A function from $\mathbb{R}^2$ to $\mathbb{R}$ is usually plotted as a surface in $\mathbb{R}^3$.
+A \emph{heatmap} visualizes such a function in only two dimensions by assigning the output of the function to a color (instead of a height).
+For example, Figure \ref{fig:pcmexample} uses a heatmap to graph $f(x,y) = sin(x)sin(y)$ on $[-6,6] \times [-6,6]$.
 
-We now use the pcolormesh function to represent the surface $z=\sin(x)\sin(y)$:
+The plot in Figure \ref{fig:pcmexample} was created with the function \li{plt.pcolormesh()}.
+To draw Figure \ref{fig:pcmexample}, we must first create a grid of points at which to evaluate $f$.
+We do this with the function \li{np.meshgrid()}, which is explained in Figure [TODO!].
+
 \begin{lstlisting}
-n = 401
-x = np.linspace(-6, 6, n)
-y = np.linspace(-6, 6, n)
-# Returns a coordinate matrix given coordinate vectors.
+x = np.linspace(-6, 6, 401)
+y = np.linspace(-6, 6, 401)
 X, Y = np.meshgrid(x, y)
-C = np.sin(X) * np.sin(Y)
-plt.pcolormesh(X, Y, C)
+\end{lstlisting}
+The arrays $X$ and $Y$ satisfy \li{(X[i,j], Y[i,j]) = (x[i],y[j])}.
+
+Now we can evaluate $f(x,y)$ at each point in the grid and plot the result.
+\begin{lstlisting}
+f = np.sin(X) * np.sin(Y)
+plt.pcolormesh(X, Y, f)
+plt.pcolorbar()    # Show scale
 plt.show()
 \end{lstlisting}
 This plot is shown in Figure \ref{fig:pcmexample}
 \begin{figure}
 \includegraphics[width=\textwidth]{sinxsiny.png}
-\caption{Color plot of $\sin\left(x\right)\times\sin\left(y\right)$.}
+\caption{A heatmap of $f(x,y)=\sin\left(x\right)\times\sin\left(y\right)$ drawn by \li{plt.pcolormesh()}.}
 \label{fig:pcmexample}
 \end{figure}
 
@@ -270,41 +274,40 @@ and set the default value to zero. \end{problem}
 
 \end{comment}
 
-\section*{subplots}
-
-We can plot multiple different images within the same figure using the \li{plt.subplot} command.
-It takes three arguments: the total number of rows for the figure, the total number of columns for the figure, and the index of the current subplot.
+\section*{Subplots}
+\emph{Subplots} are nonoverlapping plots arranged in a grid within a single figure (see Figure \ref{fig:subplots}).
+In \li{matplotlib}, specify which subplot you wish to modify with with command \li{plt.subplot(numrows, numcols, fignum)}.
+Here, \li{numrows} is the number of rows of subplots in the figure, \li{numcols} is the number of columns of subplots in the figure, and \li{fignum} is the index of the subplot you wish to modify.
 This index starts at 1 and increments across rows first.
-Preface the code for each subplot with the following command:
-\begin{lstlisting}
-plt.subplot(numrows, numcols, fignum)
-\end{lstlisting}
-If all the argument values are less than 10, commas and spaces can be omitted.
 
-The following example shows plots of $sin x$ and $cos x$ on two different axes within the same figure.
-Figure \ref{fig:subplots} is the output from this code.
+The following code draws Figure \ref{fig:subplots}.
 \begin{lstlisting}
 x = np.linspace(-np.pi, np.pi, 400)
 y1 = np.sin(x)
 y2 = np.cos(x)
-# Commas and spaces are omitted between arguments.
-plt.subplot(211)
+
+# Draw the first subplot
+plt.subplot(2, 1, 1)
 plt.plot(x, y1)
-plt.subplot(212)
+
+# Draw the second subplot
+plt.subplot(2, 1, 2)
 plt.plot(x, y2)
+
 plt.show()
 \end{lstlisting}
 
 \begin{figure}
 \includegraphics[width=\textwidth]{subplots.pdf}
-\caption{An example of the use of subplots in matplotlib.}
+\caption{The graphs of $\sin(x)$ and $\cos(x)$ as subplots in a single figure.}
 \label{fig:subplots}
 \end{figure}
 
-\subsection*{Titles and Labels}
+\subsection*{Titles}
 
-We can add titles to each subplot using the \li{plt.title} function.
-The \li{plt.suptitle} function allows us to give the entire figure a title as well.
+The function \li{plt.title()} will add a title to a plot.
+If you are working with subplots, this command will add a title to the subplot you are currently modifying.
+To add a title above the entire figure, use \li{plt.suptitle()}.
 
 \begin{problem}
 Make a plot with 4 subplots.

@@ -48,6 +48,7 @@ def sinxsiny():
     
     
     plt.pcolormesh(X, Y, C, edgecolors='face', shading='flat')
+    plt.colorbar()
     plt.savefig("sinxsiny.png", size=png_size)
     plt.clf()
     
