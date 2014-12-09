@@ -512,7 +512,7 @@ Here is the function definition and some setup.
 \begin{lstlisting}
 1. def Filter(image, filter):
 2.     m, n = image.shape
-3.     l, k = filter.shape
+3.     h, k = filter.shape
 \end{lstlisting}
 To convolve \li{image} with \li{filter}, we must first \emph{pad} the array \li{image} with zeros around the edges.
 This is because in \eqref{equ:convolve}, entries $A_{ij}$ are set to zero when $i$ or $j$ is out of bounds.
@@ -612,8 +612,8 @@ That is, we define the derivative in the $x$-direction at the $ij^{th}$ pixel to
 \frac{1}{2}A_{i+1, j} - \frac{1}{2}A_{i-1, j}.
 \]
 
-We can use a convolution to create a matrix $B$ whose $ij^{th}$ entry is the derivative of $A$ at the $ij^{th}$ entry, in the $x$-direction.
-In fact, $B = A \ast S$, where
+We can use a convolution to create a matrix $A_x$ whose $ij^{th}$ entry is the derivative of $A$ at the $ij^{th}$ entry, in the $x$-direction.
+In fact, $A_x = A \ast S$, where
 \[
 S = \frac{1}{8} \begin{pmatrix}
 -1 & 0 & 1\\
