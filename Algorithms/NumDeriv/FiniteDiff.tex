@@ -500,10 +500,10 @@ To compute the entry of the convolution matrix $C$ located at a black dot, take 
 
 \subsubsection*{Implementation in NumPy}
 Let us write a function that convolves an image with a filter. 
-You can test this function on the image \li{cameraman.png}, which appears in Figure \ref{fig:cameraman}.
+You can test this function on the image \li{cameraman.jpg}, which appears in Figure \ref{fig:cameraman}.
 You can load this image and plot it with matplotlib.
 \begin{lstlisting}
->>> K = plt.imread('cameraman.png')
+>>> K = plt.imread('cameraman.jpg')
 >>> plt.imshow(K, cmap = 'gray')
 >>> plt.show()
 \end{lstlisting}
@@ -547,7 +547,7 @@ Finally, we iterate through the image to compute each entry of the convolution m
 \item SciPy has a function that convolves two matrices just like \li{Filter}.
 Load this function with the command \li{from scipy.signal import convolve2d}. 
 Then, convolve an image \li{img} with a filter \li{F} by typing \li{convolve2d(img, F)}.
-Test this function on \li{cameraman.png}.
+Test this function on \li{cameraman.jpg}.
 \end{enumerate}
 \end{problem}
 
@@ -562,7 +562,7 @@ G = \frac{1}{159}\begin{pmatrix}
 2&4&5&4&2
 \end{pmatrix}.
 \]
-We can use the function \li{Filter} that we wrote in Problem \ref{prob:filter} to apply a Gaussian blur to the image \li{cameraman.png}. 
+We can use the function \li{Filter} that we wrote in Problem \ref{prob:filter} to apply a Gaussian blur to the image \li{cameraman.jpg}. 
 The result is in Figure \ref{fig:cameraman_blur}.
 Blurring an image can remove ``noise'', or random variation that is the visual analog of static in a radio signal (and equally undesirable).
 
@@ -571,7 +571,7 @@ Blurring an image can remove ``noise'', or random variation that is the visual a
 \centering
 \begin{subfigure}[b]{.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{cameraman.png}
+\includegraphics[width=\textwidth]{cameraman.jpg}
 \caption{Unfiltered image.}
 \label{fig:cameraman}
 \end{subfigure}
@@ -642,7 +642,7 @@ The constant $M$ should be ``sufficiently large'' enough to pick out those pixel
 A good choice for $M$ is 4 times the average value of $\|\nabla A(ij)\|_2$ over the whole image $A$.
 
 
-When the Sobel filter is applied to \li{cameraman.png}, we get the image in Figure \ref{fig:cameraman_edges}. 
+When the Sobel filter is applied to \li{cameraman.jpg}, we get the image in Figure \ref{fig:cameraman_edges}. 
 Here, the 1's in $B$ were mapped to ``white'' and the 0's were mapped to ``black.''
 
 
