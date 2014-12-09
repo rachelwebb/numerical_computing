@@ -63,7 +63,7 @@ def heatmap_gray():
     plt.savefig("heatmap_gray.png", bbox_inches='tight')
     plt.close()
     
-def healthcare():
+def healthcare_linscale():
 
     m = 2.07
     s = 0.63
@@ -76,17 +76,28 @@ def healthcare():
 
     sp_samples = sp.array(samples)
 
-    plt.figure(num=1, figsize=(10, 4) )
+    #plt.figure(num=1, figsize=(10, 4) )
 
-    plt.subplot(1,2,1)
-    #plt.figure()
     plt.hist(sp.exp(sp_samples), 100)
+	
+    plt.savefig("healthcare_linscale.pdf")
+    plt.close()
+    
+def healthcare_logscale():
+    m = 2.07
+    s = 0.63
 
-    plt.subplot(1,2,2)
-    #plt.figure()
+    num_samples = 10000
+    samples = []
+
+    for i in xrange(num_samples):
+        samples.append(sp.random.lognormal(m, s)) 
+
+    sp_samples = sp.array(samples)
+
     plt.hist(sp_samples, 100)
 	
-    plt.savefig("healthcare.pdf")
+    plt.savefig("healthcare_logscale.pdf")
     plt.close()
 	 
 def simplify_plot():
@@ -168,7 +179,8 @@ if __name__ == "__main__":
     dog_plots()
     heatmap_color()
     heatmap_gray()
-    healthcare()
+    healthcare_linscale()
+    healthcare_logscale()
     simplify_plot()
     log_plots()
     

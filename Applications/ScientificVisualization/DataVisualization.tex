@@ -124,10 +124,16 @@ We may think that all health care claims are cheap.
 However, when we take the logarithm of the claims prices, we get the histogram on the right in Figure \ref{fig:healthcare}. 
 Graphed on this scale, the data has a bell-shaped distribution similar to a normal distribution. 
 Moreover, we see that there are some very expensive claims being submitted, though they are few. 
-
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{healthcare.pdf}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{healthcare_linscale.pdf}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{healthcare_logscale.pdf}
+\end{subfigure}
 \caption{The same data (meant to resemble the prices of health care claims) is plotted in both histograms above. 
 The plot at left is a lin-lin scale, whereas the plot at right is a log-lin scale. 
 In this case, changing scales revealed important information about the data.}
