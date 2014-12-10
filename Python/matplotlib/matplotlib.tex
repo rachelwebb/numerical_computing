@@ -23,12 +23,25 @@ plt.plot(x, y)
 plt.show()
 \end{lstlisting}
 
+
 \begin{figure}
 \centering
+\begin{subfigure}[t]{.49\textwidth}
+\centering
 \includegraphics[width=\textwidth]{exp_plot.pdf}
-\caption{A graph of $e^x$ created with \li{plt.plot()}.}
+\caption{A graph of $e^x$.}
 \label{fig:exp_plot}
+\end{subfigure}
+\begin{subfigure}[t]{.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{statemachine.pdf}
+\caption{A graph of ten lines with randomly generated $y$ values.}
+\label{fig:statemachine}
+\end{subfigure}
+\caption{Plots created with \li{plt.plot()}.}
+\label{fig:lineplots}
 \end{figure}
+
 
 All calls to \li{plt} functions will modify the same figure until you call \li{plt.show()}. 
 The function \li{plt.show()} displays the current figure and resets the system, so that the next call to a \li{plt} function modifies a new figure. 
@@ -48,26 +61,21 @@ for row in y:
 plt.show()
 \end{lstlisting}
 
-Alternatively, we can produce the same graph with a single call to \li{plt.plot}.
+Alternatively, we can produce the same graph with a single call to \li{plt.plot()}.
 \begin{lstlisting}
 plt.plot(x, y[0], x, y[1], x, y[2], x, y[3], x, y[4], x, y[5], x, y[6], x, y[7], x, y[8], x, y[9])
 plt.show()
 \end{lstlisting}
 
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{statemachine.pdf}
-\caption{A graph of ten lines with randomly generated $y$ values, created with \li{plt.plot()}.}
-\label{fig:statemachine}
-\end{figure}
 
-
+\begin{comment}
 \begin{problem} Plot the function $\sin(x)$ from $0$ to $2\pi$ with a red dashed line.
 Then plot the function $\cos(x)$ on the same domain with a blue dotted line.
 Implement both with a single call to the \li{plot()} function.
 Information on how to do this can be found in Appendix \ref{mpltables}.
 \end{problem}
+\end{comment}
 
 \begin{comment}
 There are also many functions that we may use to set different values in
@@ -140,21 +148,26 @@ the plotting environment. A few examples are shown in Table
 
 	\end{comment}
 	
-\begin{problem}
-Plot the curve $1/(x-1)$ from $-2$ to $6$ with a magenta dashed line.
-Force the plot to only show $y$ values that are between $-6$ and $6$.
-Make your line width 5. Once again, more information on how to do this can be found in Appendix \ref{mpltables}.
-By default, \li{plot()} will try to make the graph connected.
-Correct this so that the graph \emph{appears} to be discontinuous at $x=1$ (as it should be) by modifying the input values.
+\begin{problem}\label{prob:lineplot}
+Plot the curve $1/(x-1)$ on [-2,6].
+Do the following to your plot:
 
-Your plot should look like the figure below.
+\begin{enumerate}
+\item The function \li{plt.plot()} will make the curve look continuous at $x=1$. 
+Plot the two sides of the curve separately (still with a single call to \li{plt.plot()}) so that the graph looks discontinuous at $x=1$.
+\item Plot the curve with a line that is magenta, dashed, and thick (see Appendix \ref{mpltables}).
+\item Change the range of the $y$-axis to be $[-6, 6]$.
+\end{enumerate}
+Your final plot should look like Figure \ref{fig:problem2}.
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{soln2.pdf}
+\includegraphics[width=.7\textwidth]{soln2.pdf}
+\caption{Correct output for Problem \ref{prob:lineplot}.}
 \label{fig:problem2}
 \end{figure}
 \end{problem}
 
+\begin{comment}
 \begin{problem} Plot the curve $\sin(x)\frac{1}{x+1}$ from $0$ to $10$.
 
 Use blue shading under the curve when it is positive and red when it is negative (you may want to consider using the \li{fill_between} command.
@@ -178,11 +191,15 @@ Your plot should look like the figure below.
 \label{fig:problem3}
 \end{figure}
 \end{problem}
+\end{comment}
+
+
+
 
 \subsection*{Heatmaps}
 A function from $\mathbb{R}^2$ to $\mathbb{R}$ is usually plotted as a surface in $\mathbb{R}^3$.
 A \emph{heatmap} visualizes such a function in only two dimensions by assigning the output of the function to a color (instead of a height).
-For example, Figure \ref{fig:pcmexample} uses a heatmap to graph $f(x,y) = sin(x)sin(y)$ on $[-6,6] \times [-6,6]$.
+For example, Figure \ref{fig:pcmexample} uses a heatmap to graph $f(x,y) = \sin(x)\sin(y)$ on $[-6,6] \times [-6,6]$.
 
 The plot in Figure \ref{fig:pcmexample} was created with the function \li{plt.pcolormesh()}.
 To draw Figure \ref{fig:pcmexample}, we must first create a grid of points at which to evaluate $f$.
@@ -209,6 +226,7 @@ This plot is shown in Figure \ref{fig:pcmexample}
 \label{fig:pcmexample}
 \end{figure}
 
+\begin{comment}
 \begin{problem} Use plt.pcolormesh to plot the absolute value of the function $x^3 +2x^2 -x +3$ on the complex plane with 0 $\leq$ \li{x} $\leq$ 2 and 0 $\leq$ \li{y} $\leq$ 2.
 \emph{Helpful Hint}: First create your domain arrays, then convert these to a single array of complex variables to evaluate the function.
 
@@ -219,6 +237,17 @@ Your plot should look like Figure \ref{fig:pcolormesh}.
 \caption{Another example of a colorplot.}
 \label{fig:pcolormesh}
 \end{figure}
+\end{problem}
+\end{comment}
+
+\begin{problem}
+\leavevmode
+\begin{enumerate}
+\item Plot the function $f(x,y) = \sin(x)\sin(y)/(xy)$ on $[-2\pi,2\pi] \times [-2\pi,2\pi]$. 
+Include the scale bar in your plot.
+\item Change the limits on the $x$- and $y$-axes so that the plot is only over the domain $[-2\pi,2\pi] \times [-2\pi,2\pi]$.
+\end{enumerate}
+
 \end{problem}
 
 \begin{comment}
@@ -273,6 +302,60 @@ manipulate the phase of the wave shown. Have it range from 0 to $2\pi$
 and set the default value to zero. \end{problem}
 
 \end{comment}
+
+\subsection*{Other plots}
+The function call \li{plt.scatter(x,y)} draws a \emph{scatter plot} from two 1-D arrays \li{x} and \li{y} by plotting the points \li{(x[i], y[i])}.
+As an example, the code below produces Figure \ref{fig:scatter}.
+
+\begin{lstlisting}
+x = np.linspace(1,10,10)
+y = np.random.rand(10)
+# The argument 's' specifies the marker size
+plt.scatter(x, y, s=100)
+plt.show()
+\end{lstlisting}
+
+
+\begin{figure}
+\centering
+\begin{subfigure}[t]{.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{scatter.pdf}
+\caption{A scatter plot.}
+\label{fig:scatter}
+\end{subfigure}
+\begin{subfigure}[t]{.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{histogram.pdf}
+\caption{A histogram.}
+\label{fig:histogram}
+\end{subfigure}
+\caption{A scatter plot produced with \li{plt.scatter()} and a histogram produced with \li{plt.hist()}.}
+\label{fig:otherplots}
+\end{figure}
+
+
+A \emph{histogram} is a way to visualize a 1-D data set, or list of values. 
+A histogram is created by dividing up the range of the values into a finite number of intervals, or \emph{bins}.
+Then, the number of values in each bin is added up.
+Graphically, these totals are represented by bars whose length is equal to the number of values in the interval.
+For example, to produce Figure \ref{fig:histogram}, we used 100 decimals randomly chosen in the interval [0,1) and 10 bins evenly dividing the interval.
+
+Histograms can be drawn with the function call \li{plt.hist(x)}. 
+The input \li{x} should be a 1-D NumPy array.
+You can specify the bins with the keyword argument \li{bins}.
+The following code produces Figure \ref{fig:histogram}.
+
+\begin{lstlisting}
+x = np.random.rand(100)
+plt.hist(x, bins=10, range=[0,1])
+plt.show()
+\end{lstlisting}
+
+The function \li{plt.hist()} also returns some arrays, the first of which is a list of the total number of values in each bin.
+
+
+
 
 \section*{Subplots}
 \emph{Subplots} are nonoverlapping plots arranged in a grid within a single figure (see Figure \ref{fig:subplots}).
