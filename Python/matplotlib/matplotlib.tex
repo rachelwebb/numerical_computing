@@ -221,7 +221,7 @@ plt.show()
 \end{lstlisting}
 This plot is shown in Figure \ref{fig:pcmexample}
 \begin{figure}
-\includegraphics[width=\textwidth]{sinxsiny.png}
+\includegraphics[width=.7\textwidth]{sinxsiny.png}
 \caption{A heatmap of $f(x,y)=\sin\left(x\right)\times\sin\left(y\right)$ drawn by \li{plt.pcolormesh()}.}
 \label{fig:pcmexample}
 \end{figure}
@@ -240,19 +240,21 @@ Your plot should look like Figure \ref{fig:pcolormesh}.
 \end{problem}
 \end{comment}
 
-\begin{problem}
+\begin{problem}\label{prob:heatmap}
 \leavevmode
 \begin{enumerate}
 \item Plot the function $f(x,y) = \sin(x)\sin(y)/(xy)$ on $[-2\pi,2\pi] \times [-2\pi,2\pi]$. 
 Include the scale bar in your plot.
+\item Change the color scheme of your plot with the keyword argument \li{cmap='seismic'} in the call to \li{plt.pcolormesh()}. 
+You can see a list of all possible color schemes at \url{http://matplotlib.org/examples/color/colormaps_reference.html}.
 \item Change the limits on the $x$- and $y$-axes so that the plot is only over the domain $[-2\pi,2\pi] \times [-2\pi,2\pi]$.
 \item Fix the aspect ratio of your plot so that it is a square using the line \li{plt.gca().set_aspect('equal')}.
 \end{enumerate}
 Your finished plot should look like Figure \ref{fig:heatmapProb}.
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{pcolor2.png}
-\caption{Another example of a colorplot.}
+\includegraphics[width=.7\textwidth]{pcolor2.png}
+\caption{Correct output for Problem \ref{prob:heatmap}.}
 \label{fig:heatmapProb}
 \end{figure}
 \end{problem}
@@ -311,14 +313,34 @@ and set the default value to zero. \end{problem}
 \end{comment}
 
 \subsection*{Other plots}
-The function call \li{plt.scatter(x,y)} draws a \emph{scatter plot} from two 1-D arrays \li{x} and \li{y} by plotting the points \li{(x[i], y[i])}.
+A \emph{histogram} is a way to visualize a 1-D data set, or list of values. 
+A histogram is created by dividing up the range of the values into a finite number of intervals, or \emph{bins}.
+Then, the number of values in each bin is added up.
+Graphically, these totals are represented by bars whose length is equal to the number of values in the bin.
+
+For example, suppose we randomly choose 20 integers between 1 and 10.
+This code creates a histogram depicting how many of each number we chose.
+Its output is in Figure \ref{fig:histogram}.
+
+\begin{lstlisting}
+x = np.random.randint(1, 11, 20)
+plt.hist(x, bins=10, range=[.5, 10.5])
+plt.show()
+\end{lstlisting}
+
+In this example our data set \li{x} consists of only integer values.
+We created 10 bins in the range [.5, 10.5] so that each bin contains exactly one integer.
+
+The function \li{plt.hist()} also returns some arrays, the first of which is a list of the total number of values in each bin.
+
+We could also use a \emph{scatter plot} to visualize the random integers \li{x} that we generated in the previous example. 
+The \li{matplotlib} function call \li{plt.scatter(x,y)} draws a scatter plot from two 1-D arrays \li{x} and \li{y} by plotting the points \li{(x[i], y[i])}.
 As an example, the code below produces Figure \ref{fig:scatter}.
 
 \begin{lstlisting}
-x = np.linspace(1,10,10)
-y = np.random.rand(10)
+t = np.linspace(1,20,20)
 # The argument 's' specifies the marker size
-plt.scatter(x, y, s=100)
+plt.scatter(t, x, s=100)
 plt.show()
 \end{lstlisting}
 
@@ -327,41 +349,19 @@ plt.show()
 \centering
 \begin{subfigure}[t]{.49\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatter.pdf}
-\caption{A scatter plot.}
-\label{fig:scatter}
-\end{subfigure}
-\begin{subfigure}[t]{.49\textwidth}
-\centering
 \includegraphics[width=\textwidth]{histogram.pdf}
 \caption{A histogram.}
 \label{fig:histogram}
 \end{subfigure}
+\begin{subfigure}[t]{.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{scatter.pdf}
+\caption{A scatter plot.}
+\label{fig:scatter}
+\end{subfigure}
 \caption{A scatter plot produced with \li{plt.scatter()} and a histogram produced with \li{plt.hist()}.}
 \label{fig:otherplots}
 \end{figure}
-
-
-A \emph{histogram} is a way to visualize a 1-D data set, or list of values. 
-A histogram is created by dividing up the range of the values into a finite number of intervals, or \emph{bins}.
-Then, the number of values in each bin is added up.
-Graphically, these totals are represented by bars whose length is equal to the number of values in the interval.
-For example, to produce Figure \ref{fig:histogram}, we used 100 decimals randomly chosen in the interval [0,1) and 10 bins evenly dividing the interval.
-
-Histograms can be drawn with the function call \li{plt.hist(x)}. 
-The input \li{x} should be a 1-D NumPy array.
-You can specify the bins with the keyword argument \li{bins}.
-The following code produces Figure \ref{fig:histogram}.
-
-\begin{lstlisting}
-x = np.random.rand(100)
-plt.hist(x, bins=10, range=[0,1])
-plt.show()
-\end{lstlisting}
-
-The function \li{plt.hist()} also returns some arrays, the first of which is a list of the total number of values in each bin.
-
-
 
 
 \section*{Subplots}
@@ -388,23 +388,42 @@ plt.show()
 \end{lstlisting}
 
 \begin{figure}
-\includegraphics[width=\textwidth]{subplots.pdf}
+\includegraphics[width=.7\textwidth]{subplots.pdf}
 \caption{The graphs of $\sin(x)$ and $\cos(x)$ as subplots in a single figure.}
 \label{fig:subplots}
 \end{figure}
 
-\subsection*{Titles}
+\begin{problem}\label{prob:subplot}
+Follow these steps to generate a plot similar to that in Figure \ref{fig:subplotProb}.
+\begin{enumerate}
+\item Generate 50 random numbers in the interval $[0,1)$ with the function \li{np.random.rand()}.
+\item Create a plot with two subplots. 
+In the first subplot, draw a histogram of your data with 5 equally-sized bins.
+\item In the second subplot, 
+\begin{enumerate}
+\item Draw a scatter plot of your data. 
+Use the integers 1-50 for the $x$-coordinates and use your data for the $y$-coordinates.
+\item Plot a red horizontal line whose height is equal to the mean of your data.
+\end{enumerate}
+\end{enumerate}
 
-The function \li{plt.title()} will add a title to a plot.
-If you are working with subplots, this command will add a title to the subplot you are currently modifying.
-To add a title above the entire figure, use \li{plt.suptitle()}.
+\begin{figure}[H]
+\includegraphics[width=.7\textwidth]{subplotProb.pdf}
+\caption{Correct output for Problem \ref{prob:subplot}.}
+\label{fig:subplotProb}
+\end{figure}
 
+\end{problem}
+
+
+\begin{comment}
 \begin{problem}
 Make a plot with 4 subplots.
 In the subplots place graphs of $e^x$, $sin(x)$, $cos(x)$, and $x^2$.
 Plot each graph over the interval $(-\pi,\pi)$.
 Title each graph accordingly and title the entire figure ``My Different Plots."
 \end{problem}
+\end{comment}
 
 \begin{comment}
 %Table \ref{mpl:basics}
@@ -467,13 +486,11 @@ Title each graph accordingly and title the entire figure ``My Different Plots."
 
 \section*{Mayavi}
 
-matplotlib is designed primarily for 2D plotting.
-Although matplotlib can also create basic 3D plots, it is better to create 3D plots using a library that was specifically designed to do so: Mayavi.
-Not only is Mayavi designed primarily for 3D plotting, it further has the benefits of easy integration with Python scientific libraries and a user interface that allows for interaction with all data and objects.
+Although \li{matplotlib} is capable of creating 3-D plots, Mayavi does it better. 
+We will use Mayavi for all 3-D plots in these labs.
+For information beyond what is found in this tutorial, see \url{http://docs.enthought.com/mayavi/mayavi/}.
 
-We encourage you to visit the formal documentation at \url{http://docs.enthought.com/mayavi/mayavi/} for more information.
-
-Within Mayavi, we will be using the \li{mlab} API which is imported like so:
+To get started, import \li{mlab} from \li{mayavi}.
 \begin{lstlisting}
 from mayavi import mlab
 \end{lstlisting}
