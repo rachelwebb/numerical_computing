@@ -246,8 +246,15 @@ Your plot should look like Figure \ref{fig:pcolormesh}.
 \item Plot the function $f(x,y) = \sin(x)\sin(y)/(xy)$ on $[-2\pi,2\pi] \times [-2\pi,2\pi]$. 
 Include the scale bar in your plot.
 \item Change the limits on the $x$- and $y$-axes so that the plot is only over the domain $[-2\pi,2\pi] \times [-2\pi,2\pi]$.
+\item Fix the aspect ratio of your plot so that it is a square using the line \li{plt.gca().set_aspect('equal')}.
 \end{enumerate}
+Your finished plot should look like Figure \ref{fig:heatmapProb}.
 
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{pcolor2.png}
+\caption{Another example of a colorplot.}
+\label{fig:heatmapProb}
+\end{figure}
 \end{problem}
 
 \begin{comment}
