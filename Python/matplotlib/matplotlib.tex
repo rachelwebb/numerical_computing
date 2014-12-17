@@ -2,7 +2,7 @@
 \objective{Learn some of the plotting functions available in \li{matplotlib} and Mayavi.}
 \label{lab:Matplotlib_and_Mayavi}
 
-\section*{The \li{matplotlib} library}
+\section*{2-D plotting with \li{matplotlib}}
 The Python library \li{matplotlib} will be our primary tool for creating 2-D graphs in this text. This lab introduces the basic features of \li{matplotlib}; for more information, visit the documentation at \url{http://matplotlib.org}.
 
 To begin, import \li{pyplot} from \li{matplotlib}.
@@ -364,7 +364,7 @@ plt.show()
 \end{figure}
 
 
-\section*{Subplots}
+\subsection*{Subplots}
 \emph{Subplots} are nonoverlapping plots arranged in a grid within a single figure (see Figure \ref{fig:subplots}).
 In \li{matplotlib}, specify which subplot you wish to modify with with command \li{plt.subplot(numrows, numcols, fignum)}.
 Here, \li{numrows} is the number of rows of subplots in the figure, \li{numcols} is the number of columns of subplots in the figure, and \li{fignum} is the index of the subplot you wish to modify.
@@ -484,18 +484,20 @@ Title each graph accordingly and title the entire figure ``My Different Plots."
 
     \end{comment}
 
-\section*{Mayavi}
+\section*{3-D plotting with Mayavi (Optional)}
 
 Although \li{matplotlib} is capable of creating 3-D plots, Mayavi does it better. 
 We will use Mayavi for all 3-D plots in these labs.
 For information beyond what is found in this tutorial, see \url{http://docs.enthought.com/mayavi/mayavi/}.
-
 To get started, import \li{mlab} from \li{mayavi}.
 \begin{lstlisting}
 from mayavi import mlab
 \end{lstlisting}
 
-\li{mlab} has many plotting functions, which are detailed at \url{http://docs.enthought.com/mayavi/mayavi/auto/mlab_helper_functions.html}.
+The module \li{mlab} has many plotting functions.
+We will introduce a few in this lab; for more see \url{http://docs.enthought.com/mayavi/mayavi/auto/mlab_helper_functions.html}.
+You can also browse examples at \url{http://docs.enthought.com/mayavi/mayavi/auto/examples.html}.
+
 \begin{comment}
 \begin{table}
 \begin{center}
@@ -519,7 +521,7 @@ Function & Description \\
 \caption{Some plotting functions in \li{mlab}.}
 \label{table:mlab_functions}
 \end{table}
-\end{comment}
+
 All these functions can be ``tested" (which provides an example figure for the function) with the command:
 \begin{lstlisting}
 mlab.test_<plotting function>()
@@ -533,7 +535,7 @@ mlab.test_fancy_mesh()
 mlab.show()
 \end{lstlisting}
 
-\begin{comment}
+
 The result should resemble Figure \ref{fig:fancymesh}.
 
 \begin{figure}
@@ -541,54 +543,20 @@ The result should resemble Figure \ref{fig:fancymesh}.
 \caption{An example of the fancy mesh plotting function}
 \label{fig:fancymesh}
 \end{figure}
-\end{comment}
+
 
 In this lab, we will focus our attention on introducing the \li{mesh}, \li{plot3d}, and \li{points3d} functions.
 
 Like matplotlib, \li{mlab} takes a set of data points and plots it.
 However, instead of passing just \li{x} and \li{y} coordinates as we did in matplotlib, we also send \li{z} coordinates to produce a 3D plot.
 
-\begin{comment}
-\subsection*{surf}
-The \li{surf} function is great for simple structures like orthogonal grids
-because it will create efficient data structures.
-It is common to use 2D arrays returned by \li{np.meshgrid}.
 
-For more complex structures, the \li{mesh} function is more appropriate.
 \end{comment}
 
-\subsection*{mesh}
-\li{mesh} plots a surface using grid-spaced data.
-It expects three 2D NumPy arrays (i.e., a grid of \li{(x,y,z)} coordinates).
-As with pcolormesh in matplotlib, it is important that all of the given arrays have the same shape.
-The following illustrates a hyperbolic paraboloid, using the colormap \li{RdYlGn}.
-\begin{lstlisting}
-import numpy as np
-from mayavi import mlab
+\subsection*{Lines}
+The function call \li{mlab.plot3d(x,y,z)} plots the points \li{(x[i], y[i], z[i])} and connects them with straight lines.
+The code below produces the flower in Figure \ref{fig:plot3d}
 
-x = np.linspace(-4,4,300)
-y = np.linspace(-4,4,300)
-X, Y = np.meshgrid(x,y)
-
-Z = X**2/4-Y**2/4
-
-mlab.mesh(X, Y, Z, colormap='RdYlGn')
-mlab.show()
-\end{lstlisting}
-
-This will produce Figure \ref{fig:mesh_example}
-\begin{figure}
-\includegraphics[width=\textwidth]{mesh_example.png}
-\caption{A hyperbolic paraboloid}
-\label{fig:mesh_example}
-\end{figure}
-
-\subsection*{plot3d}
-\li{plot3d} is used to draw lines between points.
-It expects three one-dimensional NumPy arrays to provide the position of the line.
-
-
-The following illustrates a simple floral design.
 \begin{lstlisting}
 num = np.pi/1000
 pts = np.arange(0, 2*np.pi + num, num)
@@ -598,90 +566,66 @@ z = np.sin(pts*6/11)
 mlab.plot3d(x, y, z)
 mlab.show()
 \end{lstlisting}
-This will produce Figure \ref{fig:plot3d}
+
 \begin{figure}
-\includegraphics[width=\textwidth]{plot3d.png}
-\caption{A simple floral.}
+\includegraphics[width=.7\textwidth]{plot3d.png}
+\caption{Sample output of \li{mlab.plot3d()}.}
 \label{fig:plot3d}
 \end{figure}
 
 
-\subsection*{points3d}
-\li{points3d} is similar to \li{plot3d}, except that it plots glyphs (the three-dimensional analogue of points) at the positions of the supplied data, and does not connect them like \li{plot3d} does.
-It takes the same arguments, three 1D NumPy arrays that form a line given by a list of \li{(x,y,z)} coordinates.
-For this example, we will also use a keyword argument, \li{s}, which provides an associated scalar value for each point given.
-This modifies the size and color of the glyphs.
-We also use a scale factor to adjust the size of the points so that all of them are visible.
+\subsection*{Points}
+The function call \li{mlab.points3d(x,y,z)} plots the points \li{(x[i], y[i], z[i])}, but does not connect them. 
+In the code below, the optional input array \li{s} defines a scalar for each point that modifies the color and size of the point.
+The output is in Figure \ref{fig:points3d}.
 
-The following illustrates a simple heart - given the right perspective.
 \begin{lstlisting}
 pts = np.linspace(0, 4 * np.pi, 30)
 x = np.sin(2 * pts)
 y = np.cos(pts)
 z = np.cos(2 * pts)
 s = 2+np.sin(pts)
+# Adjust the keyword argument 'scale_factor' so all points are visible
 mlab.points3d(x, y, z, s, scale_factor=.15)
 mlab.show()
 \end{lstlisting}
-This will produce Figure \ref{fig:points3d}.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{points3d.png}
-\caption{A simple heart.}
+\includegraphics[width=.7\textwidth]{points3d.png}
+\caption{Sample output of \li{mlab.points3d()}.}
 \label{fig:points3d}
 \end{figure}
 
-\subsection*{Changing Looks}
-The color of your object can be explicitly defined using the \li{color} keyword argument.
-It is specified as a triplet (red, green, blue) of floating points ranging from 0 to 1.
-For example, (1.0, 1.0, 1.0) is white.
+The plotting functions in Mayavi allow you to specify the color of a plot, either as a solid color or with a varying colormap.
+For example, the plot in Figure \ref{fig:points3d} uses the colormap \li{}.%TODO!!!
+For a list of all colormaps in Mayavi, see \url{http://docs.enthought.com/mayavi/mayavi/mlab_changing_object_looks.html}.
 
-If, however, you would prefer to vary the colors across your visualization, we recommend using a colormap.
-For example, in Figure \ref{fig:mesh_example} we used the colormap \li{RdYlGn} to make our hyperbolic paraboloid a blend from red to cream to green.
-Visit \url{http://docs.enthought.com/mayavi/mayavi/mlab_changing_object_looks.html} for a list of all previously established colormaps.
-\begin{comment}
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|c|r|}
-\hline
-\multicolumn{2}{c}
-{Colormaps} \\
-\hline
-\li{Accent} & \li{autumn} & \li{black-white} \\
-\li{blue-red} & \li{Blues} & \li{bone} \\
-\li{BrBG} & \li{BuGn} & \li{BuPu} \\
-\li{cool} & \li{copper} & \li{Dark2} \\
-\li{flag} & \li{gist_earth} & \li{gist_gray} \\
-\li{gist_heat} & \li{gist_ncar} & \li{gist_rainbow} \\
-\li{gist_stern} & \li{gist_yarg} & \li{GnBu} \\
-\li{gray} & \li{Greens} & \li{Greys} \\
-\li{hot} & \li{hsv} & \li{jet} \\
-\li{Oranges} & \li{OrRd} & \li{Paired} \\
-\li{Pastel1} & \li{Pastel2} & \li{pink} \\
-\li{PiYG} & \li{PRGn} & \li{prism} \\
-\li{PuBu} & \li{PuBuGn} & \li{PuOr} \\
-\li{PuRd} & \li{PurpLes} & \li{RdBu} \\
-\li{RdGy} & \li{RdPu} & \li{RdYlBu} \\
-\li{RdYlGn} & \li{Reds} & \li{Setl} \\
-\li{Set2} & \li{Set3} & \li{Spectral} \\
-\li{spring} & \li{summer} & \li{winter} \\
-\li{YlGnBu} & \li{YlGn} & \li{YlOrRd} \\
-\li{YlOrBr} \\
-\hline
-\end{tabular}
-\end{center}
-\caption{Colormaps}
-\label{table:colormaps}
-\end{table}
-\end{comment}
+\subsection*{Surfaces}
+You can draw a surface in mayavi with \li{mlab.surf()}.
+This function accepts three arrays, \li{X}, \li{Y}, and \li{Z}, where \li{X} and \li{Y} determine a grid of points similar to the output of \li{np.meshgrid()}.
+The array \li{Z} gives the height of the surface at each of these points.
 
-\subsection*{Useful Features}
-Another useful feature in \li{mayavi} is the record feature.
-This can be found by clicking the pipeline view in the top left corner of a plotting window.
-In the pipeline view there is a round, red button.
-Clicking it opens a recorder that keeps track of all the changes made interactively to the visualization, using valid lines of Python code.
+The output of \li{np.meshgrid()} is the transpose of what \li{mlab.surf()} expects.
+To avoid confusion, use the function \li{np.mgrid()} instead.
+This function uses the slicing syntax \li{[start : stop : step]} 
+The code below produces the hyperbolic paraboloid in Figure \ref{fig:surf_example}.
 
-\begin{problem}
+% TODO: Test this!!!
+\begin{lstlisting}
+X, Y = np.mgrid[-4:4:0.025, -4:4:0.025]
+Z = X**2/4-Y**2/4
+mlab.surf(X, Y, Z, colormap='RdYlGn')
+mlab.show()
+\end{lstlisting}
+We use \li{mlab.show()} to display the figure.
+
+\begin{figure}
+\includegraphics[width=.7\textwidth]{mesh_example.png}
+\caption{Sample output of \li{mlab.surf()}.}
+\label{fig:mesh_example}
+\end{figure}
+
+\begin{problem}\label{prob:grand_canyon}
 Provided Grand Canyon topological radar data from NASA, do the following.
 
 \begin{itemize}
@@ -696,11 +640,13 @@ Provided Grand Canyon topological radar data from NASA, do the following.
 
 This should produce Figure \ref{fig:GrandCanyon}
 
-\end{problem}
-
-\begin{figure}
-\includegraphics[width=\textwidth]{GrandCanyon.png}
-\caption{A view of the Grand Canyon}
+\begin{figure}[H]
+\includegraphics[width=.7\textwidth]{GrandCanyon.png}
+\caption{Correct output for Problem \ref{prob:grand_canyon}.}
 \label{fig:GrandCanyon}
 \end{figure}
+
+\end{problem}
+
+
 
