@@ -203,7 +203,58 @@ For example, Figure \ref{fig:pcmexample} uses a heatmap to graph $f(x,y) = \sin(
 
 The plot in Figure \ref{fig:pcmexample} was created with the function \li{plt.pcolormesh()}.
 To draw Figure \ref{fig:pcmexample}, we must first create a grid of points at which to evaluate $f$.
-We do this with the function \li{np.meshgrid()}, which is explained in Figure [TODO!].
+We do this with the function \li{np.meshgrid()}, which is explained in Figure \ref{fig:meshgrid}.
+
+\begin{figure}
+\begin{tikzpicture}[>=stealth', shorten <= .1cm,shorten >=.1cm, dot/.style=
+	{circle,fill=black,minimum size=3pt,inner sep=0pt, outer sep=-1pt} ]
+
+\foreach \x/\y in {0/0, 0/2, 0/4, 2/0, 2/2, 2/4, 4/0, 4/2, 4/4} 
+	\node[draw, dot]at(\x,\y){};
+\foreach \x/\y in {0/0, 0/1, 0/2, 1/0, 1/1, 1/2, 2/0, 2/1, 2/2} 
+	\node[draw=none]at(\x*2-.5, \y*2+.3){(\x,\y)};
+
+\foreach \x/\y in {0/0, 0/1, 0/2, 1/0, 1/1, 1/2, 2/0, 2/1, 2/2} 
+	\node[draw=none]at(\x*.75+7, \y*.75+.1){\x};
+\foreach \x/\y in {0/0, 0/1, 0/2, 1/0, 1/1, 1/2, 2/0, 2/1, 2/2} 
+	\node[draw=none]at(\x*.75+7, \y*-.75+3.9){\y};
+
+\draw[-, thick](6.7,-.25)--(6.7,1.95); 
+\draw[-, thick](8.8,-.25)--(8.8,1.95);
+\draw[-, thick](6.7,2.05)--(6.7,4.25);
+\draw[-, thick](8.8,2.05)--(8.8,4.25);
+\draw[-, thick](8.8,4.14)--(8.7,4.14);
+\draw[-, thick](8.8,2.16)--(8.7,2.16);
+\draw[-, thick](6.7,4.14)--(6.8,4.14);
+\draw[-, thick](6.7,2.16)--(6.8,2.16);
+\draw[-, thick](8.8,1.84)--(8.7,1.84);
+\draw[-, thick](8.8,-.135)--(8.7,-.135);
+\draw[-, thick](6.8,1.84)--(6.7,1.84);
+\draw[-, thick](6.8,-.135)--(6.7,-.135);
+
+\node[draw=none](X)at(6.3,.9){\texttt{X}=};
+\node[draw=none](y)at(6.3,3.15){\texttt{Y}=};
+
+\node[draw=none](point1)at(-.3, -.4){\texttt{x}=\big[0,};
+\node[draw=none, node distance=2.35cm](point2)
+	[right of=point1]{1,};
+\node[draw=none, node distance=2cm](point3)
+	[right of=point2]{2\big]};
+\node[draw=none, rotate=270](point4)at(4.4,4.25)
+	{\texttt{y}=\big[0,};
+\node[draw=none, rotate=270, node distance=2.35cm](point5)
+	[right of=point4]{1,};
+\node[draw=none, rotate=270, node distance=2cm](point6)
+	[right of=point5]{2\big]};
+
+
+
+\end{tikzpicture}
+
+\caption{This figure illustrates the function call \li{np.meshgrid(x, y)}, which returns the arrays \li{X} and \li{Y}. 
+The returned arrays give the $x$- and $y$-coordinates of the points in the grid formed by \li{x} and \li{y}.}
+\label{fig:meshgrid}
+\end{figure}
 
 \begin{lstlisting}
 x = np.linspace(-6, 6, 401)
