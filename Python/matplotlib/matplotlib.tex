@@ -215,9 +215,9 @@ We do this with the function \li{np.meshgrid()}, which is explained in Figure \r
 	\node[draw=none]at(\x*2-.5, \y*2+.3){(\x,\y)};
 
 \foreach \x/\y in {0/0, 0/1, 0/2, 1/0, 1/1, 1/2, 2/0, 2/1, 2/2} 
-	\node[draw=none]at(\x*.75+7, \y*.75+.1){\x};
+	\node[draw=none]at(\x*.75+7, \y*.75+.1){\y};
 \foreach \x/\y in {0/0, 0/1, 0/2, 1/0, 1/1, 1/2, 2/0, 2/1, 2/2} 
-	\node[draw=none]at(\x*.75+7, \y*-.75+3.9){\y};
+	\node[draw=none]at(\x*.75+7, \y*-.75+3.9){\x};
 
 \draw[-, thick](6.7,-.25)--(6.7,1.95); 
 \draw[-, thick](8.8,-.25)--(8.8,1.95);
@@ -232,8 +232,8 @@ We do this with the function \li{np.meshgrid()}, which is explained in Figure \r
 \draw[-, thick](6.8,1.84)--(6.7,1.84);
 \draw[-, thick](6.8,-.135)--(6.7,-.135);
 
-\node[draw=none](X)at(6.3,.9){\texttt{X}=};
-\node[draw=none](y)at(6.3,3.15){\texttt{Y}=};
+\node[draw=none](X)at(6.3,.9){\texttt{Y}=};
+\node[draw=none](y)at(6.3,3.15){\texttt{X}=};
 
 \node[draw=none](point1)at(-.3, -.4){\texttt{x}=\big[0,};
 \node[draw=none, node distance=2.35cm](point2)
@@ -647,9 +647,6 @@ mlab.show()
 \label{fig:points3d}
 \end{figure}
 
-The plotting functions in Mayavi allow you to specify the color of a plot, either as a solid color or with a varying colormap.
-For example, the plot in Figure \ref{fig:points3d} uses the colormap \li{}.%TODO!!!
-For a list of all colormaps in Mayavi, see \url{http://docs.enthought.com/mayavi/mayavi/mlab_changing_object_looks.html}.
 
 \subsection*{Surfaces}
 You can draw a surface in mayavi with \li{mlab.surf()}.
@@ -658,24 +655,31 @@ The array \li{Z} gives the height of the surface at each of these points.
 
 The output of \li{np.meshgrid()} is the transpose of what \li{mlab.surf()} expects.
 To avoid confusion, use the function \li{np.mgrid()} instead.
-This function uses the slicing syntax \li{[start : stop : step]} 
+This function uses the slicing syntax \li{[start:stop:step]} 
 The code below produces the hyperbolic paraboloid in Figure \ref{fig:surf_example}.
 
-% TODO: Test this!!!
 \begin{lstlisting}
 X, Y = np.mgrid[-4:4:0.025, -4:4:0.025]
 Z = X**2/4-Y**2/4
 mlab.surf(X, Y, Z, colormap='RdYlGn')
 mlab.show()
 \end{lstlisting}
-We use \li{mlab.show()} to display the figure.
+
 
 \begin{figure}
 \includegraphics[width=.7\textwidth]{mesh_example.png}
 \caption{Sample output of \li{mlab.surf()}.}
-\label{fig:mesh_example}
+\label{fig:surf_example}
 \end{figure}
 
+The plotting functions in Mayavi allow you to specify the color of a plot, either as a solid color or with a varying colormap.
+For example, the plot in Figure \ref{fig:surf_example} uses the colormap \li{'RdYlGn'}.
+For a list of all colormaps in Mayavi, see \url{http://docs.enthought.com/mayavi/mayavi/mlab_changing_object_looks.html}.
+
+
+%TODO: this problem is copied from https://github.com/enthought/mayavi/blob/master/examples/mayavi/mlab/canyon.py.
+% we either need to cite this (and thus give the solution) or find a different problem.
+\begin{comment}
 \begin{problem}\label{prob:grand_canyon}
 Provided Grand Canyon topological radar data from NASA, do the following.
 
@@ -698,6 +702,6 @@ This should produce Figure \ref{fig:GrandCanyon}
 \end{figure}
 
 \end{problem}
-
+\end{comment}
 
 
