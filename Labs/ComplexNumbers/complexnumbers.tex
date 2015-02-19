@@ -1,7 +1,7 @@
 \lab{Complex Numbers}{Complex Numbers}
 \label{Lab:complex_intro}
 
-\objective{Use visualizations of complex functions to estimate their zeros and poles.}
+\objective{Visualize complex functions to estimate their zeros and poles.}
 
 \section*{Polar Representation of Complex Numbers}
 
@@ -10,7 +10,7 @@ Any complex number $z = x+iy$ can be written in \emph{polar coordinates} as $re^
 \item $r=x^2+y^2$ is the magnitude of $z$, and
 \item $\theta = \arctan(y/x)$ is the angle between $z$ and 0, as in Figure \ref{}TODO!.
 \end{itemize}
-Conversely, by Euler's formula, $re^{i\theta} = r\cos(\theta) _ ir\sin(\theta)$, so by equating real and imaginary parts, $x=r\cos(\theta)$ and $y=r\sin(\theta)$.
+Conversely, Euler's formula implies $re^{i\theta} = r\cos(\theta) + ir\sin(\theta)$. Then if we set $re^{i\theta}=x+iy$ and equate real and imaginary parts, we find $x=r\cos(\theta)$ and $y=r\sin(\theta)$.
 
 It is easy to convert between coordinate systems in NumPy, which uses the symbol \li{1j} for the complex number $i=\sqrt{-1}$.
 \begin{lstlisting}
@@ -33,16 +33,16 @@ These functions also operate elementwise on NumPy arrays.
 True
 \end{lstlisting}
 
-\section*{Visualization of Complex Functions}
+\section*{Visualizing complex functions}
 Suppose we wish to graph a function $f(z): \mathbb{C} \rightarrow \mathbb{C}$. 
 The difficulty is that $\mathbb{C}$ has 2 real dimensions, so the graph of $f$ should use 4 real dimensions.
- Since we already have ways to graph in 3 dimensions, we want to choose one dimension to ignore. 
+ Since we already have ways to visualize 3 dimensions, we should choose one dimension to ignore. 
  We will ignore the magnitude $r = |f(z)|$ of the output.
 
 To visualize $f$, we will asign a color to each point $z \in \mathbb{C}$. 
 The color will correspond to the angle $\theta$ of the output $f(z)$. 
 As an example, we have plotted the identity function $f(z)=z$ in Figure \ref{fig:identity}.
-As $\theta$ goes from 0 to $2\pi$, the colors cycle smoothly from red to green to purple and back to red.
+As $\theta$ goes from 0 to $2\pi$, the colors cycle smoothly counterclockwise from red to green to purple and back to red.
 
 This kind of plot uses rectangular coordinates in the domain and polar coordinates (or rather, just the $\theta$-coordinate) in the codomain.
 Note that this kind of plot tells you nothing about $|f(z)|$.
@@ -83,17 +83,27 @@ def plot_complex(f, xbounds, ybounds, res=401):
     '''Plot the complex function f.
     
     INPUTS:
-    f	- A function handle. Should represent a function from C to C.
-    xbounds	- A tuple (xmin, xmax) describing the bounds on the real part of the domain.
-    ybounds	-  A tuple (ymin, ymax) describing the bounds on the imaginary part of the domain.
-    res		- A scalar that determines the resolution of the plot. Defaults to 401.
+    f        - A function handle. Should represent a function 
+    			from C to C.
+    xbounds  - A tuple (xmin, xmax) describing the bounds on the real part 
+    			of the domain.
+    ybounds  - A tuple (ymin, ymax) describing the bounds on the imaginary 
+    			part of the domain.
+    res      - A scalar that determines the resolution of the plot. 
+    			Defaults to 401.
     '''
 \end{lstlisting}
 When you call \li{plt.pcolormesh()} in this function, you should specify the keyword arguments \li{vmin} and \li{vmax}. 
 These define which numbers should map to each end of the color scale. 
 If you do not specify them, matplotlib will scale the colormap to fit your data exactly.
 
-Check your function on the identity (graphed in Figure \ref{fig:identity}) and on the square root function (graphed in Figure \ref{}).
+Check your function on the identity (graphed in Figure \ref{fig:identity}) and on the function $f(z) = \sqrt{z^2+1}$, which is graphed in Figure \ref{fig:check_plot}.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{check_plot.png}
+\caption{Plot of $\sqrt{z^2+1}$ on the domain $\{x+iy \mid x \in [-3,3] , y \in [-3,3]\}$ created by \li{plot_complex()}.}
+\label{fig:check_plot}
+\end{figure}
+
 \end{problem}
 
 
@@ -107,13 +117,13 @@ The plots created by your function \li{plot_complex()} are surprisingly informat
 \leavevmode
 \begin{enumerate}
 \item Use \li{plot_complex()} to plot the functions $z^2$, $z^3$, and $z^4$. What do you notice?
-\item Plot $z^3 - i*z^4 - 3*z^6$ on the domain $[-1,1] \times [-1,1]$. 
+\item Plot $z^3 - iz^4 - 3z^6$ on the domain $\{x+iy \mid x \in [-1,1] , y \in [-1,1]\}$ (this plot is Figure \ref{TODO!}). 
 Compare it to your plot of $z^3$, especially near the origin.
 Based on these plots, what can you learn about the zeros of a function from its graph?
 \end{enumerate}
 \end{problem}
 
-In Problem \ref{prob:zeros} you should have noticed that in your plot of $z^n$, the color circle around 0 repeats $n$ times. 
+In Problem \ref{prob:zeros} you should have noticed when you plot $z^n$, the color circle around 0 repeats $n$ times. 
 This is explained by looking at $z^n$ in polar coordinates:
 \[
 z^n = (re^{i \theta})^n = r^n e^{i(n\theta)}.
@@ -121,14 +131,14 @@ z^n = (re^{i \theta})^n = r^n e^{i(n\theta)}.
 Multiplying $\theta$ by a number greater than $1$ compresses the graph along the ``$\theta$-axis'' by a factor of $n$. 
 Compare this to replacing $f(x)$ with $f(nx)$ when $f$ is a function from $\mathbb{R}$ to $\mathbb{R}$.
 
-From Problem \ref{prob:zeros} you should also have noticed that the plot of $z^3 - i*z^4 - 3*z^6$ looks a lot like the plot of $z^3$ near the origin.
+From Problem \ref{prob:zeros} you should also have noticed that the plot of $z^3 - iz^4 - 3z^6$ looks a lot like the plot of $z^3$ near the origin.
 This is because when $z$ is very small, $z^4$ and $z^6$ are much smaller than $z^3$, and so the behavior of $z^3$ dominates the function.
 
 In general, $f(z)$ has a \emph{zero of order $n$ at $z_0$} if the Taylor series of $f(z)$ centered at $z_0$ can be written as 
 \[
 f(z) = \sum_{k=n}^{\infty} a_k(z-z_0)^k \qquad \text{with} \; a_n \neq 0.
 \]
-In other words, $f(z) = a_0(z-z_0)^n + a_1(z-z_0)^{n+1} + \ldots$. 
+In other words, $f(z) = a_n(z-z_0)^n + a_{n+1}(z-z_0)^{n+1} + \ldots$. 
 In a small neighborhood of $z_0$, the quantity $|z-z_0|^{n+k}$ is much smaller than $|z-z_0|^n$, and so the function behaves like $a_n(z-z_0)^n$.
 This explains why you can estimate the order of a zero by counting the number of times the colors circle a point (see Figure \ref{TODO}).
 
