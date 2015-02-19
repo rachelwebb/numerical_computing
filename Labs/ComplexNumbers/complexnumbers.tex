@@ -67,8 +67,9 @@ This colormap is red at both ends, so that $0$ and $2 \pi$ will map to the same 
 
 
 \begin{figure}
-\includegraphics[width=\textwidth]{Identity.png}
-\caption{Color plot of the identity map.}
+\includegraphics[width=.7\textwidth]{Identity.png}
+\caption{Plot of $f: \mathbb{C} \rightarrow \mathbb{C}$ defined by $f(z)=z$. 
+The color at each point $z$ represents the argument of $f(z)$.}
 \label{fig:identity}
 \end{figure}
 
@@ -99,8 +100,8 @@ If you do not specify them, matplotlib will scale the colormap to fit your data 
 
 Check your function on the identity (graphed in Figure \ref{fig:identity}) and on the function $f(z) = \sqrt{z^2+1}$, which is graphed in Figure \ref{fig:check_plot}.
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{check_plot.png}
-\caption{Plot of $\sqrt{z^2+1}$ on the domain $\{x+iy \mid x \in [-3,3] , y \in [-3,3]\}$ created by \li{plot_complex()}.}
+\includegraphics[width=.7\textwidth]{check_plot.png}
+\caption{Plot of $\sqrt{z^2+1}$ on the domain $\{x+iy \mid x \in [-3,3] , \; y \in [-3,3]\}$ created by \li{plot_complex()}.}
 \label{fig:check_plot}
 \end{figure}
 
@@ -117,7 +118,7 @@ The plots created by your function \li{plot_complex()} are surprisingly informat
 \leavevmode
 \begin{enumerate}
 \item Use \li{plot_complex()} to plot the functions $z^2$, $z^3$, and $z^4$. What do you notice?
-\item Plot $z^3 - iz^4 - 3z^6$ on the domain $\{x+iy \mid x \in [-1,1] , y \in [-1,1]\}$ (this plot is Figure \ref{TODO!}). 
+\item Plot $z^3 - iz^4 - 3z^6$ on the domain $\{x+iy \mid x \in [-1,1] , \; y \in [-1,1]\}$ (this plot is Figure \ref{fig:zeros}). 
 Compare it to your plot of $z^3$, especially near the origin.
 Based on these plots, what can you learn about the zeros of a function from its graph?
 \end{enumerate}
@@ -140,13 +141,20 @@ f(z) = \sum_{k=n}^{\infty} a_k(z-z_0)^k \qquad \text{with} \; a_n \neq 0.
 \]
 In other words, $f(z) = a_n(z-z_0)^n + a_{n+1}(z-z_0)^{n+1} + \ldots$. 
 In a small neighborhood of $z_0$, the quantity $|z-z_0|^{n+k}$ is much smaller than $|z-z_0|^n$, and so the function behaves like $a_n(z-z_0)^n$.
-This explains why you can estimate the order of a zero by counting the number of times the colors circle a point (see Figure \ref{TODO}).
+This explains why you can estimate the order of a zero by counting the number of times the colors circle a point (see Figure \ref{fig:zeros}).
 
-% Insert plot of $f(z) = z^3 - i*z^4 - 3*z^6$. From this plot we see that $f(z)$ has a zero of order 3 at the origin, and 3 zeros of order 1 scattered around it. This accounts for the 6 roots of $f(z)$ that are guaranteed to exist by the Fundamental Theorem of Algebra.
+\begin{figure}
+\includegraphics[width=.7\textwidth]{zeros.png}
+\caption{Plot of $f(z)=z^3 - iz^4 - 3z^6$ on the domain $\{x+iy \mid x \in [-1,1] , \; y \in [-1,1]\}$.
+From this plot we see that $f(z)$ has a zero of order 3 at the origin, and 3 zeros of order 1 scattered around it. 
+This accounts for the 6 roots of $f(z)$ that are guaranteed to exist by the Fundamental Theorem of Algebra.}
+\label{fig:zeros}
+\end{figure}
+
 
 \subsection*{Poles}
 
-These plots can also tell us about the poles of a function.
+The plots created by \li{plot_complex()} can also tell us about the poles of a function.
 
 \begin{problem}\label{prob:poles}
 \leavevmode
@@ -154,7 +162,7 @@ These plots can also tell us about the poles of a function.
 \item Use \li{plot_complex()} to plot the function $f(z) = 1/z$. 
 Compare this to the plot of $f(z)=z$ in Figure \ref{fig:identity}.
 What is the difference?
-\item Plot $z^{-2}$, $z^{-3}$, and $z^2+iz^{-1}+z^{-3}$ on the domain $[-1,1] \times [-1,1]$. 
+\item Plot $z^{-2}$, $z^{-3}$, and $z^2+iz^{-1}+z^{-3}$ on the domain $\{x+iy \mid x \in [-1,1] , \; y \in [-1,1]\}$. 
 Compare the plots of the last two functions near the origin.
 Based on these plots, what can you learn about the poles of a function from its graph?
 \end{enumerate}
@@ -172,7 +180,7 @@ In general, a function has a \emph{pole of order n} at $z_0$ if its Laurent seri
 f(z) = \sum_{k=-n}^\infty a_k(z-z_0)^k  \qquad \text{with} \; a_{-n} \neq 0.
 \]
 In other words, $f(z) = a_{-n}(z-z_0)^{-n}+a_{-n+1}(z-z_0)^{-n+1} + \ldots$.
-Since $|z-z_0|^{-n+k}$ is much smaller than $|z-z_0|^n$ when $|z-z_0|$ is small, near $z_0$ the function behaves like $a_{-n}(z-z_0)^-n$.
+Since $|z-z_0|^{-n+k}$ is much smaller than $|z-z_0|^{-n}$ when $|z-z_0|$ is small, near $z_0$ the function behaves like $a_{-n}(z-z_0)^{-n}$.
 This explains why you can estimate the order of a pole by counting the number of times the colors circle a point in the ``backwards direction.''
 
 Finally, a function has an \emph{essential pole} at $z_0$ if its Laurent series in a punctured neighborhood of $z_0$ requires infinitely many terms with negative exponents.
@@ -180,8 +188,16 @@ For example,
 \[
 e^{1/z} = \sum_{k=0}^{\infty}\frac{1}{n! z^n} = 1+\frac{1}{z}+\frac{1}{2}\frac{1}{z^2}+\frac{1}{6}\frac{1}{z^3}+\ldots.
 \]
-The plot of $f(z) = e^{1/z}$ is in Figure \ref{fig:}. 
+The plot of $f(z) = e^{1/z}$ is in Figure \ref{fig:essential_singularity}. 
 Here, you can see that the colors circle around an essential singularity infinitely many times.
+
+\begin{figure}
+\includegraphics[width=.7\textwidth]{essential_pole.png}
+\caption{Plot of $e^{1/z}$ on the domain $\{x+iy \mid x \in [-1,1] , \; y \in [-1,1]\}$.
+The colors circle clockwise around the origin because it is a singularity, not a zero.
+Because the singularity is essential, the colors repeat infinitely many times.}
+\label{fig:essential_singularity}
+\end{figure}
 
 \subsection*{Using plots to estimate poles and zeros}
 To summarize, you can use the plot of a complex function to estimate its poles and zeros with the following rules.
@@ -194,10 +210,10 @@ To summarize, you can use the plot of a complex function to estimate its poles a
 \begin{problem}\label{prob:findpz}
 Plot these functions on the domains given and estimate the number and order of their poles and zeros.
 \begin{itemize}
-\item $f(z) = e^z$ on $\{ x+iy \mid x \in [-8,8], y \in [-8,8]\}$
+\item $f(z) = e^z$ on $\{ x+iy \mid x \in [-8,8], \; y \in [-8,8]\}$
 %\item $z^2-2z^7+2z^6-4z^5+2z^4-2z^3-5z^2+4z-4$ from $x \in [-2.5,2.5]$ and $y \in [-2.5,2.5]$ 
-\item $f(z) = \tan(z)$ on $\{x+iy \mid x \in [-8,8], y \in [-8,8]\}$
-\item $f(z) = \frac{16z^4+32z^3+32z^2+16z+4}{16z^4-16z^3+5z^2}$ on $\{x+iy \mid x \in [-1,1], y \in [-1,1]\}$
+\item $f(z) = \tan(z)$ on $\{x+iy \mid x \in [-8,8], \; y \in [-8,8]\}$
+\item $f(z) = \frac{16z^4+32z^3+32z^2+16z+4}{16z^4-16z^3+5z^2}$ on $\{x+iy \mid x \in [-1,1], \; y \in [-1,1]\}$
 %\item $f(z) = \sin{\frac{1}{z}}$ on ${x+iy \mid x \in [-.8,.8], y \in [-.8,.8]\}$
 \end{itemize}
 \end{problem}
@@ -217,17 +233,18 @@ Plotting functions is not a substitute for rigorous mathematics.
 Often, plots can be deceptive.
 
 \begin{problem}\label{prob:caution}
+\leavevmode
 \begin{enumerate}
 \item This example shows that sometimes you have to ``zoom in'' to see all the information about a pole.
 \begin{enumerate}
-\item Plot the function $f(z) =\sin( \frac{1}{100z})$ on the domain $\{x+iy \mid x \in [-1,1], y \in [-1,1]\}$.
+\item Plot the function $f(z) =\sin( \frac{1}{100z})$ on the domain $\{x+iy \mid x \in [-1,1],\; y \in [-1,1]\}$.
 What might you conclude about this function?
-\item Now plot $f(z)$ on $\{x+iy \mid x \in [-.01,.01], y \in [-.01,.01]\}$.
+\item Now plot $f(z)$ on $\{x+iy \mid x \in [-.01,.01], \; y \in [-.01,.01]\}$.
 Now what do you conclude about the function?
 \end{enumerate}
-\item This example shows that from far away, two distinct zeros (or poles) can appear to be a single zero (or pole) of higher multiplicity.
+\item This example shows that from far away, two distinct zeros (or poles) can appear to be a single zero (or pole) of higher order.
 \begin{enumerate}
-\item Plot the function $f(z) = z+1000z^2$ on the domain $\{x+iy \mid x \in [-1,1], y \in [-1,1]\}$.
+\item Plot the function $f(z) = z+1000z^2$ on the domain $\{x+iy \mid x \in [-1,1], \; y \in [-1,1]\}$.
 What does this plot imply about the zeros of this function?
 \item Find the zeros of $f(z)$ using algebra.
 \item Plot $f(z)$ on a domain that allows you to see the true nature of its zeros.
@@ -431,14 +448,25 @@ What do you see?
 \end{enumerate}
 \end{problem}
 
-Just as raising $z$ to a positive integer ''compresses the $\theta$-axis'', making the color wheel repeat itself $n$ times around 0, raising $z$ to a negative power \emph{stretches} the $\theta$-axis, so that only one $n^{th}$ of the color wheel appears around 0.
-The ends of this $n^{th}$-slice are not the same, but they appear next to each other in the plot of $z^{-n}$.
-This discontinuity will appear in ever neighborhood of the origin. 
-However, if your domain does not contain the origin, it is possible to define a continuous root function by picking one of the roots.
+Just as raising $z$ to a positive integer ``compresses the $\theta$-axis'', making the color wheel repeat itself $n$ times around 0, raising $z$ to a negative power \emph{stretches} the $\theta$-axis, so that only one $n^{th}$ of the color wheel appears around 0.
+The colors at the ends of this $n^{th}$-slice are not the same, but they appear next to each other in the plot of $z^{-n}$.
+This discontinuity will appear in every neighborhood of the origin. 
+
+
+If your domain does not contain the origin, it is possible to define a continuous root function by picking one of the roots.
 
 
 \section*{Appendix}
-The colorize function below takes in an array of complex values and outputs the RBG colors for each point.
+It is possible to visualize the argument and the modulus of the output of a complex function $f(z)$. 
+One way to do so is to assign the modulus to a \emph{lightness} of color.
+For example, suppose we have a complex number with argument 0, so it will map to red in the color plots described above.
+If its modulus is very small, then we can map it to a blackish red, and if its modulus is large, we can map it to a whitish red.
+With this extra rule, our complex plots will still be very much the same, except that zeros will look like black dots and poles will look like white dots (see Figure \ref{fig:example} for an example).
+
+The code below implements the map we just described.
+Be warned that this implementation does not scale well.
+For example, if you try to plot a complex function whose outputs are all very small in modulus, the entire plot will appear black.
+
 
 \begin{lstlisting}
 import numpy as np
@@ -446,41 +474,56 @@ import matplotlib.pyplot as plt
 from colorsys import hls_to_rgb
 
 def colorize(z):
+    ''' 
+    Map a complex number to a color (or hue) and lightness.
+    
+    INPUT:
+    z - an array of complex numbers in rectangular coordinates
+    
+    OUTPUT:
+    If z is an n x m array, return an n x m x 3 array whose third axis encodes 
+    (hue, lightness, saturation) tuples for each entry in z. This new array can 
+    be plotted by plt.imshow().
+    '''
+    
     zy=np.flipud(z)
     r = np.abs(zy)
     arg = np.angle(zy)
 
+    # Define hue (h), lightness (l), and saturation (s)
+    # Saturation is constant in our visualizations
     h = (arg + np.pi)  / (2 * np.pi) + 0.5
     l = 1.0 - 1.0/(1.0 + r**0.3)
     s = 0.8
 
-    c = np.vectorize(hls_to_rgb) (h,l,s) # --> tuple
-    c = np.array(c)  # -->  array of (3,n,m) shape, but need (n,m,3)
+    # Convert the HLS values to RGB values.
+    # This operation returns a tuple of shape (3,n,m).
+    c = np.vectorize(hls_to_rgb) (h,l,s) 
+    
+    # Convert c to an array and change the shape to (n,m,3)
+    c = np.array(c)  
     c = c.swapaxes(0,2)
     c = c.swapaxes(0,1)
     return c
 \end{lstlisting}
 
-The following code uses the colorize function to plot  $\frac{x^2 - 1}{x}$ see \ref{fig:example} for what the output looks like.
+The following code uses the \li{colorize()} function to plot  $\frac{z^2 - 1}{z}$. The output is Figure \ref{fig:example}.
 
 \begin{lstlisting}
-def f(z):
-	return (z**2-1)/z
-xbounds=(-.5, 1.5)
-ybounds=(-1, 1)
-res=401
-x = np.linspace(xbounds[0],xbounds[1], res)
-y = np.linspace(ybounds[0],ybounds[1], res)
-X,Y = np.meshgrid(x,y)
-Z=f(X+Y*1j)
-Zc=colorize(Z)
-plt.imshow(Zc,extent=(xbounds[0],xbounds[1],ybounds[0],ybounds[1]))
-plt.show()
+>>> f = lambda z :  (z**2-1)/z
+>>> x = np.linspace(-.5, 1.5, 401)
+>>> y = np.linspace(-1, 1, 401)
+>>> X,Y = np.meshgrid(x,y)
+>>> Z=f(X+Y*1j)
+>>> Zc=colorize(Z)
+>>> plt.imshow(Zc, extent=(-.5, 1.5, -1, 1))
+>>> plt.show()
 \end{lstlisting}
 
 \begin{figure}
 \includegraphics[width=\textwidth]{example.png}
-\caption{Colorplot of the  function $\frac{x^2 - 1}{x}$.}
+\caption{Plot of the function $\frac{z^2 - 1}{z}$ created with \li{colorize()}.
+Notice that the zero at 1 is a black dot and the pole at 0 is a white dot.}
 \label{fig:example}
 \end{figure}
 
