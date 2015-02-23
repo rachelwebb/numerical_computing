@@ -8,9 +8,36 @@
 Any complex number $z = x+iy$ can be written in \emph{polar coordinates} as $re^{i\theta}$ where
 \begin{itemize}
 \item $r=\sqrt{x^2+y^2}$ is the magnitude of $z$, and
-\item $\theta = \arctan(y/x)$ is the angle between $z$ and 0, as in Figure \ref{}TODO!.
+\item $\theta = \arctan(y/x)$ is the angle between $z$ and 0, as in Figure \ref{fig:polar_coords}.
 \end{itemize}
 Conversely, Euler's formula implies $re^{i\theta} = r\cos(\theta) + ir\sin(\theta)$. Then if we set $re^{i\theta}=x+iy$ and equate real and imaginary parts, we find $x=r\cos(\theta)$ and $y=r\sin(\theta)$.
+
+\begin{figure}
+\begin{tikzpicture}[dot/.style={circle,fill=black,minimum size=3pt,inner sep=0pt,
+            outer sep=-1pt}, >=stealth', thick, xscale=1.4]
+
+\draw[-](-.5,0)--(3,0);
+\draw[-](0,-.5)--(0,3);
+
+\draw[-, dashed, gray, anchor=east](2.6,2.3)--(0,2.3);
+\node[draw=none]()at(-.3,2.3){$iy$};
+\draw[-, dashed, gray, anchor=north ](2.6,2.3)--(2.6,0);
+\node[draw=none]()at(2.6,-.3){$x$};
+
+\draw[gray](.75,0) arc (0:45:.7 and .7);
+
+\draw[-](0,0)--(2.6,2.3);
+\node[dot,draw](point)at(2.6,2.3){};
+\node[draw=none]()at(.9,.35){$\theta$};
+
+\draw [decorate,decoration={brace,amplitude=10pt},rotate=-45, gray] (0,0) --(.2,3.45);
+\node[draw=none]()at(.95,1.55){$r$};
+
+
+\end{tikzpicture}
+\caption{The complex number represented by the black dot equals both $x+iy$ and $re^{i\theta}$, when $\theta$ is written in radians.}
+\label{fig:polar_coords}
+\end{figure}
 
 It is easy to convert between coordinate systems in NumPy, which uses the symbol \li{1j} for the complex number $i=\sqrt{-1}$.
 \begin{lstlisting}
